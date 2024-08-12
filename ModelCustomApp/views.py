@@ -96,6 +96,19 @@ class CustomModel(APIView):
         else:
             return Response({"Method": "Metodo no disponible"})
 
+    @api_view(['POST'])
+    def deleteModel(request):
+        if request.method == 'POST':
+            try:
+                data = request.data
+                nameModel = data['Model']
+                responseRequest = ollama.delete(nameModel)
+                return JsonResponse(responseRequest)
+            except Exception as e:
+                return JsonResponse({'Exception Error': f'error > {str(e)}'})
+        else:
+            return JsonResponse({'Method': 'Metodo invalido'})
+
 def callCreateModel(modelName,modelfile):
     try:
         ollmaResponse = ollamaClient.create(model=modelName, modelfile=modelfile)
