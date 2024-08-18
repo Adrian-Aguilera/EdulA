@@ -50,7 +50,7 @@ class GeneralModel:
                 model=self.MODELLM,
                 prompt=f"Usa esta informacion: {contextEmbedding}. Responde a este mensaje: {message_user}",
                 stream=False,
-                options={'num_predict': 200, 'temperature': 0.1}
+                options={'num_predict': 200, 'temperature': 0.1, 'num_gpu':80}
             )
            #print(f'response call: {responseCall}')
             return responseCall["response"]
