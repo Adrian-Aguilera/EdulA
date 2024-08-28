@@ -14,7 +14,7 @@ class NameCollectionGeneral(models.Model):
         return self.nameCollection
 
 
-class DataFileOptions(models.Model):
+class DataFileOption(models.Model):
     fileName = models.CharField(max_length=255, help_text="nombre del archivo...", default='')
     filePDF = models.FileField(upload_to='EduApp/static/')
     def __str__(self):

@@ -17,17 +17,17 @@ class ControllerInter():
         if not type_engine:
             return "Faltan parámetros para inicializar el motor"
 
-        engine_av = type_engine.get("EngineAV", None)
+        modeAV = type_engine.get("AV", None)
 
-        if engine_av is not None:
-            engine = ControllerEduIA(EngineAV=engine_av)
+        if modeAV is not None:
+            engine = ControllerEduIA(EngineAV=modeAV)
             mensaje = async_to_sync(engine.main_engine)(message)
             return mensaje
         else:
             return "Tipo de motor no definido correctamente"
 
 # Create your views here.
-class AVEdula(APIView):
+class AsistEdula(APIView):
     @swagger_auto_schema(
         method='post',
         request_body=openapi.Schema(
@@ -70,3 +70,18 @@ class AVEdula(APIView):
                 return Response({"Error": "Fail get data"})
         else:
             return Response({"error": "metodo no disponible"})
+
+    @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
+    def responseAsist(request):
+        if request.method == 'POST':
+            try:
+                dataRequest = request.data
+                type_engine = dataRequest.get("type_engine")
+                UserMessage = dataRequest.get('user_message')
+                responseMethod = ControllerInter.main_engine(type_engine=type_engine, message=UserMessage)
+                return JsonResponse({'data': responseMethod })
+            except Exception as e:
+                return JsonResponse({'Error Exception': str(e)})
+        else:
+            return JsonResponse({'Error method': 'metodo no disponible'})

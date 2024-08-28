@@ -1,5 +1,6 @@
 from Modules.GeneralModel import GeneralModel
 from Modules.ConfigDBModel import ModelDB
+from Modules.AsistModel import AsistModel
 from dotenv import load_dotenv
 import os
 
@@ -12,8 +13,13 @@ class ControllerEduIA:
         self.EngineChat = EngineChat
 
     async def edulaAV(self, message):
-        edula_av = 'modulo para asistente virtual'
-        return edula_av
+        '''
+            cargar la clase del modulo (modelAV)
+            Llamando la funcion principal para obtener la respuesta (mainFun)
+        '''
+        modelAV = AsistModel()
+        mainFun = await modelAV.responseAV(userMessage=message)
+        return mainFun
 
     async def edulaGeneral(self, message):
         # Cargar clase con parámetros necesarios
