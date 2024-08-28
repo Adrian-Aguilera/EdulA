@@ -17,10 +17,10 @@ class ControllerInter():
         if not type_engine:
             return "Faltan parámetros para inicializar el motor"
 
-        engine_av = type_engine.get("AV", None)
+        modeAV = type_engine.get("AV", None)
 
-        if engine_av is not None:
-            engine = ControllerEduIA(EngineAV=engine_av)
+        if modeAV is not None:
+            engine = ControllerEduIA(EngineAV=modeAV)
             mensaje = async_to_sync(engine.main_engine)(message)
             return mensaje
         else:
