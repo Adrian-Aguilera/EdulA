@@ -6,5 +6,6 @@ class AsistModel:
     async def responseAV(self, userMessage):
         instancia = await sync_to_async(list)(AssistantCollection.objects.all())
         nameCollection = instancia[0].nameCollection
+        
         responseAV = nameCollection
         return responseAV

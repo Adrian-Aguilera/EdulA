@@ -24,6 +24,9 @@ class CustomModel(APIView):
     @api_view(['POST'])
     @permission_classes([IsAuthenticated])
     def createModelCustom(request):
+        '''
+            Metodo para crear un ModelFile Personalizado
+        '''
         if request.method == "POST":
             try:
                 dataRequests = request.data['modelfile']
