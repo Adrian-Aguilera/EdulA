@@ -40,7 +40,6 @@ class GeneralEdula(APIView):
                 'type_engine': openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        'EngineAV': openapi.Schema(type=openapi.TYPE_BOOLEAN),
                         'EngineGeneral': openapi.Schema(type=openapi.TYPE_BOOLEAN),
                     },
                     required=['EngineAV', 'EngineGeneral']
