@@ -94,6 +94,9 @@ class LoginEstudiante(APIView):
         if request.method == 'POST':
             try:
                 data = request.data
+                carnet = data.get('carnet')
+                password = data.get('pass')
+                return JsonResponse({"datos": {"carnet": carnet, "pass": password}})
             except Exception as e:
                 return JsonResponse({"Error Exception": f"{str(e)}"})
         else:
