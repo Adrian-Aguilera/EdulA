@@ -96,6 +96,22 @@ class LoginEstudiante(APIView):
                 data = request.data
                 carnet = data.get('carnet')
                 password = data.get('pass')
+                perfil = authenticate(carnet=carnet, password=password)
+                print(f">>>>>>>>>>>>> {perfil}")
+                return JsonResponse({"datos": {"carnet": carnet, "pass": password}})
+            except Exception as e:
+                return JsonResponse({"Error Exception": f"{str(e)}"})
+        else:
+            return JsonResponse({"Error Method": "metodo no permitido"})
+
+    @api_view(['POST'])
+    def createCuenta(request):
+        if request.method == 'POST':
+            try:
+                data = request.data
+                carnet = data.get('carnet')
+                password = data.get('pass')
+                
                 return JsonResponse({"datos": {"carnet": carnet, "pass": password}})
             except Exception as e:
                 return JsonResponse({"Error Exception": f"{str(e)}"})
