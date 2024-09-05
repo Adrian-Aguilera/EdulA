@@ -12,6 +12,7 @@ from drf_yasg import openapi
 from rest_framework.views import APIView
 #funcion para autenticar mis credenciales de estudiante
 from django.contrib.auth import authenticate
+from .models import Perfil
 
 class ControllerInter():
     # Hacer que main_engine sea síncrono, llamando async_to_sync dentro de él
@@ -27,6 +28,22 @@ class ControllerInter():
             return mensaje
         else:
             return "Tipo de motor no definido correctamente"
+
+    def insertarDatos(carnet, password):
+        if not carnet or not password:
+            return {"informacion": "El carnet y la contraseña son obligatorios."}
+        try:
+            if Perfil.objects.filter(carnet=carnet).exists():
+                return {"informacion": "Ya existe un estudiante con este carnet."}
+            nuevoEstudiante = Perfil(carnet=carnet)
+            nuevoEstudiante.set_password(raw_password=password)
+            nuevoEstudiante.save()
+
+            return {"informacion": f'El estudiante con carnet {nuevoEstudiante.carnet} se ha registrado exitosamente.'}
+
+        except Exception as e:
+            return {"informacion": f'No se pudo registrar el estudiante. Error: {str(e)}'}
+        #return({"informacion": f'{nuevoEstudiante.carnet} se ha registrado'})
 
 # Create your views here.
 class AsistEdula(APIView):
@@ -111,8 +128,8 @@ class LoginEstudiante(APIView):
                 data = request.data
                 carnet = data.get('carnet')
                 password = data.get('pass')
-                
-                return JsonResponse({"datos": {"carnet": carnet, "pass": password}})
+                insertarDatos = ControllerInter.insertarDatos(carnet=carnet, password=password)
+                return JsonResponse({"datos": insertarDatos})
             except Exception as e:
                 return JsonResponse({"Error Exception": f"{str(e)}"})
         else:
