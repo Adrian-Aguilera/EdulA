@@ -20,8 +20,8 @@ class Perfil(models.Model):
     password = models.CharField(max_length=128, help_text='contraseña del estudiante')
 
     def check_password(self, raw_password):
-        return check_password(raw_password, self.contraseña)
+        return check_password(raw_password, self.password)
 
     def set_password(self, raw_password):
-        self.contraseña = make_password(raw_password)
+        self.password = make_password(raw_password)
         self.save()
