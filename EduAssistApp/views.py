@@ -90,7 +90,6 @@ class AsistEdula(APIView):
 
 class LoginEstudiante(APIView):
     @api_view(['POST'])
-    @permission_classes([IsAuthenticated])
     def login(request):
         if request.method == 'POST':
             try:
