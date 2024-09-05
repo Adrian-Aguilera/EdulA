@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.views import APIView
+#funcion para autenticar mis credenciales de estudiante
+from django.contrib.auth import authenticate
 
 class ControllerInter():
     # Hacer que main_engine sea síncrono, llamando async_to_sync dentro de él
@@ -85,3 +87,15 @@ class AsistEdula(APIView):
                 return JsonResponse({'Error Exception': str(e)})
         else:
             return JsonResponse({'Error method': 'metodo no disponible'})
+
+class LoginEstudiante(APIView):
+    @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
+    def login(request):
+        if request.method == 'POST':
+            try:
+                data = request.data
+            except Exception as e:
+                return JsonResponse({"Error Exception": f"{str(e)}"})
+        else:
+            return JsonResponse({"Error Method": "metodo no permitido"})
