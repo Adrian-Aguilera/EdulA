@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.hashers import check_password, make_password
 
 # Create your models here.
 class AssistantCollection(models.Model):
@@ -13,3 +14,14 @@ class AssistantCollection(models.Model):
 
     def __str__(self):
         return self.nameCollection
+
+class Perfil(models.Model):
+    carnet = models.CharField(max_length=6, help_text='numero de carnet del estudiante', unique=True)
+    password = models.CharField(max_length=128, help_text='contraseña del estudiante')
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self.save()
