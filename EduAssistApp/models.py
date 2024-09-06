@@ -16,7 +16,7 @@ class AssistantCollection(models.Model):
         return self.nameCollection
 
 class Perfil(models.Model):
-    carnet = models.CharField(max_length=6, help_text='numero de carnet del estudiante')
+    carnet = models.CharField(max_length=6, help_text='numero de carnet del estudiante', unique=True)
     password = models.CharField(max_length=128, help_text='contraseña del estudiante')
 
     def check_password(self, raw_password):
