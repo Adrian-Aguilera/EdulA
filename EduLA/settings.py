@@ -59,6 +59,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'USER_ID_FIELD': 'id',  # es el campo a que tomara como referencia o indicador unico
+    'USER_ID_CLAIM': 'user_id',
 }
 
 MIDDLEWARE = [
@@ -165,6 +167,7 @@ AUTHENTICATION_BACKENDS = [
     'EduAssistApp.backends.PerfilBackend', #validacion para mi apliacion que apunta a mi modelo perfil
     'django.contrib.auth.backends.ModelBackend',  # Si quieres seguir usando el modelo User de Django el predeterminado
 ]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 

@@ -14,6 +14,10 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from .models import Perfil
 
+#importaciones para obtener tokens del de la tabla Perfil
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import PerfilTokenObtainPairSerializer
+
 class ControllerInter():
     # Hacer que main_engine sea síncrono, llamando async_to_sync dentro de él
     def main_engine(type_engine, message):
@@ -137,3 +141,6 @@ class LoginEstudiante(APIView):
                 return JsonResponse({"Error Exception": f"{str(e)}"})
         else:
             return JsonResponse({"Error Method": "metodo no permitido"})
+
+
+
