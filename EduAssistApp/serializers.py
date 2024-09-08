@@ -18,24 +18,15 @@ class PerfilTokenObtainPairSerializer(TokenObtainPairSerializer):
                 raise serializers.ValidationError(
                     {'detail': 'No active account found with the given credentials'}
                 )
-            # Si la autenticación es correcta, generamos el token
+            # Si la autenticación es correcta, generamos el token (esta funcion la hereda del TokenObtainPairSerializer)
             refresh = self.get_token(estudiante)
 
             return {
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-                'carnet': estudiante.carnet  # Retornar carnet o cualquier otro campo personalizado
+                'carnet': estudiante.carnet
             }
         else:
             raise serializers.ValidationError(
                 {'detail': 'Must include "carnet" and "password"'}
             )
-
-    @classmethod
-    def get_token(self, estudiante):
-        token = super().get_token(estudiante)
-
-        # Aquí puedes agregar campos personalizados al token
-        token['carnet'] = estudiante.carnet
-
-        return token
