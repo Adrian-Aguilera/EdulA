@@ -116,13 +116,11 @@ class LoginEstudiante(APIView):
             try:
                 data = request.data
                 carnet = data.get('carnet')
-                password = data.get('pass')
-                perfil = authenticate(carnet=carnet, password=password)
-                print(">>>>>>>", perfil)
-                if perfil is not None:
-                    return JsonResponse({"success": f"Estudiante autenticado {perfil.carnet}"})
-                else:
-                    return JsonResponse({"error": "Estudiante no registrado"})
+                password = data.get('password')
+                username = data.get('username')
+                serializerTokens = PerfilTokenObtainPairSerializer()
+                obtenerTokens = serializerTokens.validate(attrs={'carnet': carnet, 'password': password})
+                return JsonResponse(obtenerTokens)
             except Exception as e:
                 return JsonResponse({"Error Exception": f"{str(e)}"})
         else:
