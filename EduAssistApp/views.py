@@ -117,7 +117,6 @@ class LoginEstudiante(APIView):
                 data = request.data
                 carnet = data.get('carnet')
                 password = data.get('password')
-                username = data.get('username')
                 serializerTokens = PerfilTokenObtainPairSerializer()
                 obtenerTokens = serializerTokens.validate(attrs={'carnet': carnet, 'password': password})
                 return JsonResponse(obtenerTokens)
