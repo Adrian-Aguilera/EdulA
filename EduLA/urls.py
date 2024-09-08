@@ -41,7 +41,7 @@ handler504 = 'EduLA.views.error_504'
 handler404 = 'EduLA.views.error_404'
 
 urlpatterns = [
-    #rutas para apis
+    #rutas para apis custom:
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('api/EduGeneral/', include('EduGeneralApp.urls')),
@@ -49,7 +49,7 @@ urlpatterns = [
     path('LLMS/', include('ModelCustomApp.urls')),
     path('config/', include('DBConfigApp.urls')),
 
-    #rutas para obtener tokens
+    #rutas para obtener tokens con direccion al modelo Users por defecto de django:
     path('tokens/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('tokens/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
