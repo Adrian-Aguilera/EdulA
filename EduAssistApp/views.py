@@ -143,4 +143,5 @@ class LoginEstudiante(APIView):
             return JsonResponse({"Error Method": "metodo no permitido"})
 
 
-
+class PerfilTokenObtainPairView(TokenObtainPairView):
+    serializer_class = PerfilTokenObtainPairSerializer
