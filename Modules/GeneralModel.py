@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 import chromadb
 from chromadb.config import Settings
-from asgiref.sync import async_to_sync, sync_to_async
+from asgiref.sync import sync_to_async
 from EduGeneralApp.models import NameCollectionGeneral
 
 load_dotenv(override=True)
