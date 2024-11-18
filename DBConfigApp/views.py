@@ -1,5 +1,5 @@
 from Modules.GeneralModel import *
-from Controller.ControllerApp import *
+from Controller.DBController import *
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
@@ -8,7 +8,10 @@ from rest_framework.views import APIView
 from .models import DataGeneralChat, DataAsistenteChat
 from EduGeneralApp.models import NameCollectionGeneral
 from EduAssistApp.models import AssistantCollection
-#clase que se encargara de gestionar la parte de la informacion de los modelos
+
+'''
+Esta es una Vista que se encarga de crear la base de datos
+'''
 class DataToChromaDB(APIView):
     @api_view(['GET'])
     @permission_classes([IsAuthenticated])
