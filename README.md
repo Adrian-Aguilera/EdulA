@@ -59,17 +59,25 @@ Crear una aplicacion con django
 ## Instalacion de los temas para el panel admin de django
 luego de hacer las migraciones instalar los temas de para django:
 
-##### [Django](https://www.djangoproject.com/) theme (default):
-Run `python manage.py loaddata admin_interface_theme_django.json`
+##### [Django](https://www.djangoproject.com/) theme (default): Run 
 
-##### [Bootstrap](http://getbootstrap.com/) theme:
-Run `python manage.py loaddata admin_interface_theme_bootstrap.json`
+```bash
+python manage.py loaddata admin_interface_theme_django.json
+```
+##### [Bootstrap](http://getbootstrap.com/) theme: Run 
+```bash
+python manage.py loaddata admin_interface_theme_bootstrap.json
+```
 
-##### [Foundation](http://foundation.zurb.com/) theme:
-Run `python manage.py loaddata admin_interface_theme_foundation.json`
+##### [Foundation](http://foundation.zurb.com/) theme: Run 
+```bash
+python manage.py loaddata admin_interface_theme_foundation.json
+```
 
-##### [U.S. Web Design Standards](https://standards.usa.gov/) theme:
-Run `python manage.py loaddata admin_interface_theme_uswds.json`
+##### [U.S. Web Design Standards](https://standards.usa.gov/) theme: Run 
+```bash
+python manage.py loaddata admin_interface_theme_uswds.json
+```
 
 ## Deployment
 
