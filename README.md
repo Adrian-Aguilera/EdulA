@@ -34,15 +34,12 @@ una vez instalado y corriendo la terminal del .venv, instalar las dependencias c
 ```
 
 ## Informacion Adicional
-
-Crear una aplicacion con django
-
+Crear la carpeta donde estara la DB
 ```bash
-  python manage.py startapp {name_app}
+  python DBInstaller.py
 ```
 
 Crear migraciones del proyecto
-
 ```bash
   python manage.py makemigrations
   python manage.py migrate
@@ -51,6 +48,12 @@ Crear migraciones del proyecto
 Crear usuario administrador
 ```bash
   python manage.py createsuperuser
+```
+
+Crear una aplicacion con django
+
+```bash
+  python manage.py startapp {name_app}
 ```
 
 ## Instalacion de los temas para el panel admin de django
