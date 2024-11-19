@@ -31,7 +31,7 @@ schema_view = get_schema_view(
       default_version='v1',
       description="Documentación de la API para EduLA",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="adrian.aguilera23@itca.edu.sv"),
+      contact=openapi.Contact(email="adrian.aguilera23@itca.edu.sv", url="https://github.com/adrian-aguilera"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
@@ -51,7 +51,7 @@ urlpatterns = [
     path('EduAssist/api/', include('EduAssistApp.urls')),
 
     path('LLMS/', include('ModelCustomApp.urls')),
-    path('config/', include('DBConfigApp.urls')),
+    path('Config/', include('DBConfigApp.urls')),
 
     #rutas para obtener tokens con direccion al modelo Users por defecto de django:
     path('tokens/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
