@@ -1,8 +1,6 @@
-from django.shortcuts import render
-from Modules.GeneralModel import *
 from Controller.ControllerApp import *
 from dotenv import load_dotenv
-from asgiref.sync import sync_to_async
+from asgiref.sync import async_to_sync
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
@@ -10,6 +8,7 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.views import APIView
+
 #funcion para autenticar mis credenciales de estudiante
 from django.contrib.auth import authenticate
 from .models import Perfil

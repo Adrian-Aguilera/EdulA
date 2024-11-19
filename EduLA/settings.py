@@ -177,7 +177,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'EduLA/static')
 
 #archivos estaticos por app
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'EduGeneralApp/static'),
+    #os.path.join(BASE_DIR, 'EduGeneralApp/static'),
 ]
 
 """
@@ -188,39 +188,3 @@ SECURE_SSL_REDIRECT = True"""
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-#logs python django
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/debug.log'),
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'EduApp': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}

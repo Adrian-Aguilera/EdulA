@@ -6,7 +6,7 @@ class ControllerDataBase:
             objCollectionDB = ModelDB()
             createCollection = objCollectionDB.embeddingsDataBase(nameCollection=nameCollection, dataContext=dataContent)
             if createCollection:
-                return {"success": "Colleccion creada"}
+                return {"success": "Colleccion Embedding creada Exitosamente"}
             else:
                 return {'error': 'Error al crear la colleccion'}
         except Exception as e:

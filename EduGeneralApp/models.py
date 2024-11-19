@@ -1,17 +1,17 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 # Create your models here.
-class NameCollectionGeneral(models.Model):
-    nameCollection = models.CharField(max_length=255, help_text='Ingresa el nombre de la colleccion para chat general')
+class General_Collection(models.Model):
+    Nombre_Coleccion = models.CharField(max_length=255, help_text='Ingresa el nombre de la colleccion para chat general')
 
     #funcion para validar que solo se pueda ingresar una vez
     def save(self, *args, **kwargs):
-        if self.pk is None and NameCollectionGeneral.objects.exists():
-            raise ValidationError('No puedes crear un nuevo registro de ConfigGeneral. Solo puedes modificar el existente.')
-        super(NameCollectionGeneral, self).save(*args, **kwargs)
+        if self.pk is None and General_Collection.objects.exists():
+            raise ValidationError('No puedes crear un nuevo registro de AssistantCollection. Solo puedes modificar el existente.')
+        super(General_Collection, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.nameCollection
+        return self.Nombre_Coleccion
 
 
 class DataFileOption(models.Model):
