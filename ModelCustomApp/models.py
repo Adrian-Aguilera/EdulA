@@ -23,7 +23,14 @@ class ModelsLLM(models.Model):
 class SettingsChatGeneral(models.Model):
     Model_LLM = models.ForeignKey(ModelsLLM, on_delete=models.CASCADE, help_text='Modelo que se usara para el chat General')
     max_Tokens = models.IntegerField(unique=True, help_text='Maximo de tokens que generara la respuesta')
-    temperature = models.DecimalField(max_digits=2, decimal_places=2, default=0.0, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)], help_text='temperatura del modelo, entre 0 a 1')
+    temperature = models.FloatField(
+        default=0.0,
+        validators=[
+            MinValueValidator(0.0),
+            MaxValueValidator(1.0)
+        ],
+        help_text='Temperatura del modelo, entre 0 a 1'
+    )
     num_gpu = models.IntegerField(unique=True, validators=[MinValueValidator(1), MaxValueValidator(100)], help_text='Numero de GPU que usara el modelo al generar respuesta (%)')
 
     def save(self, *args, **kwargs):

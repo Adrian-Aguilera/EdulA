@@ -3,15 +3,13 @@ from dotenv import load_dotenv
 import os
 import chromadb
 from chromadb.config import Settings
+from ModelCustomApp.models import SettingsLLM, SettingsChatGeneral, SettingsChatAsistente, SettingsChroma
 from asgiref.sync import sync_to_async
-from EduGeneralApp.models import General_Collection
-
 load_dotenv(override=True)
 
 
 class FuncionesIA:
     def __init__(self):
-        self.MODELLM = os.environ.get("MODELLM")
         self.modelEmbedding = os.environ.get("MODELEMBEDDING")
         self.is_persistent = os.environ.get("IS_PERSISTENT", "False").lower() in ("true", '1', 't')
         self.persist_directory = os.environ.get("PERSIST_DIRECTORY")
@@ -36,11 +34,17 @@ class FuncionesIA:
         '''
         try:
             print(contextEmbedding)
+            settings_chat = await sync_to_async(SettingsChatGeneral.objects.select_related('Model_LLM').first)()
+            modelo = settings_chat.Model_LLM.model
+            max_tokens = settings_chat.max_Tokens
+            temperature = settings_chat.temperature
+            num_gpu = settings_chat.num_gpu
+            print(f'max tokens: {max_tokens} \n temperature: {temperature} \n num gpu: {num_gpu}')
             responseCall = await self.ollamaClient.generate(
-                model=self.MODELLM,
+                model=modelo,
                 prompt=f"Usa esta informacion: {contextEmbedding}. Responde a este mensaje: {message_user}",
                 stream=False,
-                options={'num_predict': 200, 'temperature': 0.1, 'num_gpu':100}
+                options={'num_predict': int(max_tokens), 'temperature': float(temperature), 'num_gpu':int(num_gpu)}
             )
             return responseCall["response"]
         except Exception as e:
@@ -72,8 +76,11 @@ class FuncionesIA:
             pd: consultar la documentacion  de como funciona los embeddings
         '''
         try:
+            settings_llm = await sync_to_async(SettingsLLM.objects.first)()
+            embedding_model = settings_llm.Model_Embedding
+            print(f'embedding model: {embedding_model}')
             responseEmbeddings = await self.ollamaClient.embeddings(
-                prompt=prompt, model=self.modelEmbedding
+                prompt=prompt, model=embedding_model
             )
             return responseEmbeddings
         except Exception as e:
