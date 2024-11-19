@@ -4,7 +4,7 @@ import chromadb
 import ollama
 from chromadb.config import Settings
 from dotenv import load_dotenv
-from Modules.GeneralModel import GeneralModel
+from Modules.FuncionesIA import FuncionesIA
 
 load_dotenv(override=True)
 class ModelDB:
@@ -22,7 +22,7 @@ class ModelDB:
 
     def embeddingsDataBase(self, nameCollection, dataContext):
         try:
-            generalObj = GeneralModel()
+            generalObj = FuncionesIA()
             operacion = True
             filterData = dataContext.strip().split('\n\n')
             Collection = self.ChromaClient.get_or_create_collection(name=nameCollection)

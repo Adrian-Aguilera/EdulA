@@ -1,4 +1,4 @@
-from Modules.GeneralModel import *
+from Modules.FuncionesIA import *
 from Controller.DBController import ControllerDataBase
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated

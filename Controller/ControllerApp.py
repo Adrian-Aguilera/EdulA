@@ -1,4 +1,4 @@
-from Modules.GeneralModel import GeneralModel
+from Modules.FuncionesIA import FuncionesIA
 from Modules.AsistModel import AsistModel
 from dotenv import load_dotenv
 import os
@@ -20,17 +20,10 @@ class ControllerEduIA:
         mainFun = await modelAV.responseAV(userMessage=message)
         return mainFun
 
-    async def edulaGeneral(self, message):
-        # Cargar clase con parámetros necesarios
-        modelGeneral = GeneralModel()
-        fun_model = await modelGeneral.responseGeneral(message_user=message)
-        return fun_model
 
     async def main_engine(self, message):
         if self.EngineAV:
             return await self.edulaAV(message)
-        elif self.EngineChat:
-            return await self.edulaGeneral(message)
         else:
             return "Motor no encontrado"
 

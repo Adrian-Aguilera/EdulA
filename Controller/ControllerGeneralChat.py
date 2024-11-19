@@ -1,4 +1,4 @@
-from Modules.GeneralModel import GeneralModel
+from Modules.FuncionesIA import FuncionesIA
 from EduGeneralApp.models import General_Collection
 from asgiref.sync import sync_to_async
 from dotenv import load_dotenv
@@ -8,14 +8,14 @@ import os
 load_dotenv(override=True)
 
 class GeneralChat:
-
+    def __init__(self):
+        self.funcionesIA = FuncionesIA()
     async def GeneralChat(self, message):
         '''
             cargar la clase del modulo (modelGeneral)
             Llamando la funcion principal para obtener la respuesta (mainFun)
         '''
-        modelGeneral = GeneralModel()
-        mainFun = await modelGeneral.responseGeneral(message_user=message)
+        mainFun = await self.ResponseGeneralChat(message=message)
         return mainFun
 
     async def ResponseGeneralChat(self, message):
@@ -33,8 +33,8 @@ class GeneralChat:
             #obtener el nombre de la coleccion que tiene la informacion de la base de datos de vectorial (Chroma)
             instancia = await sync_to_async(list)(General_Collection.objects.all())
             nameCollection = instancia[0].Nombre_Coleccion
-            ContextEmbeding = await GeneralModel._responseEmbedding(userMessage=message, nameCollection=nameCollection)
-            responseGenerate = await GeneralModel._callGenerate(message_user=message, contextEmbedding=ContextEmbeding)
+            ContextEmbeding = await self.funcionesIA._responseEmbedding(userMessage=message, nameCollection=nameCollection)
+            responseGenerate = await self.funcionesIA._callGenerate(message_user=message, contextEmbedding=ContextEmbeding)
             if 'error' in ContextEmbeding:
                 return ({'error': ContextEmbeding['error']})
             elif 'error' in responseGenerate:

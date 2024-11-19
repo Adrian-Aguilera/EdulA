@@ -9,7 +9,7 @@ from EduGeneralApp.models import General_Collection
 load_dotenv(override=True)
 
 
-class GeneralModel:
+class FuncionesIA:
     def __init__(self):
         self.MODELLM = os.environ.get("MODELLM")
         self.modelEmbedding = os.environ.get("MODELEMBEDDING")
@@ -40,7 +40,7 @@ class GeneralModel:
                 model=self.MODELLM,
                 prompt=f"Usa esta informacion: {contextEmbedding}. Responde a este mensaje: {message_user}",
                 stream=False,
-                options={'num_predict': 200, 'temperature': 0.1, 'num_gpu':80}
+                options={'num_predict': 200, 'temperature': 0.1, 'num_gpu':100}
             )
             return responseCall["response"]
         except Exception as e:
