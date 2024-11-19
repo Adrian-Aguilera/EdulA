@@ -3,17 +3,18 @@ from dotenv import load_dotenv
 import os
 import chromadb
 from chromadb.config import Settings
-from ModelCustomApp.models import SettingsLLM, SettingsChatGeneral, SettingsChatAsistente, SettingsChroma
+from ModelCustomApp.models import SettingLLM, SettingsChatGeneral, SettingsChatAsistente, SettingsChroma
 from asgiref.sync import sync_to_async
+from django.core.exceptions import ObjectDoesNotExist
 load_dotenv(override=True)
 
 
 class FuncionesIA:
     def __init__(self):
-        self.modelEmbedding = os.environ.get("MODELEMBEDDING")
-        self.is_persistent = os.environ.get("IS_PERSISTENT", "False").lower() in ("true", '1', 't')
-        self.persist_directory = os.environ.get("PERSIST_DIRECTORY")
-        self.systemContent = os.environ.get("SYS_CONTENT")
+        settings_Chroma = self.getChromaSettings()
+        settings_Ollama = self.clientOllama()
+        self.is_persistent = settings_Chroma.is_persistent
+        self.persist_directory = settings_Chroma.persist_directory
         # client Chroma para que cree la db y se guarde
         self.ChromaClient = chromadb.Client(
             settings=Settings(
@@ -21,8 +22,25 @@ class FuncionesIA:
                 persist_directory=self.persist_directory,
             )
         )
-        self.ollamaClient = ollama.AsyncClient(host='127.0.0.1:11434')
+        self.ollamaClient = ollama.AsyncClient(host=settings_Ollama.host)
 
+    @staticmethod
+    def getChromaSettings():
+        """Obtiene la configuración de SettingsChroma desde la base de datos."""
+        try:
+            return SettingsChroma.objects.get()
+        except ObjectDoesNotExist:
+            raise Exception("No se encontró configuración en SettingsChroma. Por favor, agrega un registro en la base de datos.")
+
+    @staticmethod
+    def clientOllama():
+        '''
+            Funcion que se encarga de crear un cliente de ollama
+        '''
+        try:
+            return SettingLLM.objects.get()
+        except ObjectDoesNotExist:
+            raise Exception("No se encontró configuración en SettingsLLM. Por favor, agrega un registro en la base de datos.")
 
     async def _callGenerate(self, message_user, contextEmbedding=None):
         '''
@@ -76,7 +94,7 @@ class FuncionesIA:
             pd: consultar la documentacion  de como funciona los embeddings
         '''
         try:
-            settings_llm = await sync_to_async(SettingsLLM.objects.first)()
+            settings_llm = await sync_to_async(SettingLLM.objects.first)()
             embedding_model = settings_llm.Model_Embedding
             print(f'embedding model: {embedding_model}')
             responseEmbeddings = await self.ollamaClient.embeddings(

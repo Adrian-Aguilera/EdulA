@@ -2,16 +2,16 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-class SettingsLLM(models.Model):
+class SettingLLM(models.Model):
     host = models.CharField(max_length=255, default='127.0.0.1:11434', help_text='Host de la conexion a ollama server, por defecto es 127.0.0.1:11434')
     Model_Embedding = models.CharField(max_length=255, default='mxbai-embed-large', help_text='Nombre del modelo que se usara para el embedding')
     def save(self, *args, **kwargs):
-        if self.pk is None and SettingsLLM.objects.exists():
-            raise ValidationError('No puedes crear un nuevo registro de SettingsLLM. Solo puedes modificar el existente.')
-        super(SettingsLLM, self).save(*args, **kwargs)
+        if self.pk is None and SettingLLM.objects.exists():
+            raise ValidationError('No puedes crear un nuevo registro de SettingLLM. Solo puedes modificar el existente.')
+        super(SettingLLM, self).save(*args, **kwargs)
 
     def __str__(self):
-        return 'Configuracion LLM General'
+        return 'Configuracion LLM'
 
 class ModelsLLM(models.Model):
     Nombre = models.CharField(max_length=255, help_text='Nombre del modelo')
@@ -20,6 +20,7 @@ class ModelsLLM(models.Model):
 
     def __str__(self):
         return f'{self.Nombre} - {self.model}'
+
 class SettingsChatGeneral(models.Model):
     Model_LLM = models.ForeignKey(ModelsLLM, on_delete=models.CASCADE, help_text='Modelo que se usara para el chat General')
     max_Tokens = models.IntegerField(unique=True, help_text='Maximo de tokens que generara la respuesta')
@@ -39,7 +40,7 @@ class SettingsChatGeneral(models.Model):
         super(SettingsChatGeneral, self).save(*args, **kwargs)
 
     def __str__(self):
-        return 'Configuracion Chat General'
+        return 'Configuracion para el Chat General'
 
 class SettingsChatAsistente(models.Model):
     Model_LLM = models.ForeignKey(ModelsLLM, on_delete=models.CASCADE, help_text='Modelo que se usara para el asistente del estudiante')
@@ -53,7 +54,7 @@ class SettingsChatAsistente(models.Model):
         super(SettingsChatAsistente, self).save(*args, **kwargs)
 
     def __str__(self):
-        return 'Configuracion Chat Asistente'
+        return 'Configuracion para el Chat Asistente'
 
 
 class SettingsChroma(models.Model):
@@ -65,4 +66,4 @@ class SettingsChroma(models.Model):
         super(SettingsChroma, self).save(*args, **kwargs)
 
     def __str__(self):
-        return 'Configuracion Chroma'
+        return 'Configuracion de Chroma'
