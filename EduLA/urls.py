@@ -44,8 +44,10 @@ urlpatterns = [
     #rutas para apis custom:
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('api/EduGeneral/', include('EduGeneralApp.urls')),
-    path('api/EduAssist/', include('EduAssistApp.urls')),
+
+    path('EduGeneral/api/', include('EduGeneralApp.urls')),
+    path('EduAssist/api/', include('EduAssistApp.urls')),
+
     path('LLMS/', include('ModelCustomApp.urls')),
     path('config/', include('DBConfigApp.urls')),
 
