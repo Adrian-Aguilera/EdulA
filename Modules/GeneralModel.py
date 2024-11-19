@@ -25,25 +25,15 @@ class GeneralModel:
         )
         self.ollamaClient = ollama.AsyncClient(host='127.0.0.1:11434')
 
-    # funcion principal de general response
-    async def responseGeneral(self, message_user):
-        try:
-            instancia = await sync_to_async(list)(General_Collection.objects.all())
-            #print(instancia[0].nameCollection)
-            nameCollection = instancia[0].Nombre_Coleccion
-            userEmbeddings = await self._responseEmbedding(message_user, nameCollection=nameCollection)
-            responseGenerate = await self._callGenerate(message_user=message_user, contextEmbedding=userEmbeddings)
-            if 'error' in userEmbeddings:
-                return ({'error': userEmbeddings['error']})
-            elif 'error' in responseGenerate:
-                return ({'error': responseGenerate['error']})
-            else:
-                return ({'response': responseGenerate})
-        except Exception as e:
-            return {"error": f"{str(e)}"}
-
 
     async def _callGenerate(self, message_user, contextEmbedding=None):
+        '''
+            funcion que se encarga de llamar a la api de ollama para generar la respuesta, y devuelve la respuesta
+            pd: contextEmbedding es el embedding de la informacion de la base de datos
+            pd: message_user es el mensaje que se esta enviando
+
+            info: solo se encarga de generar texto sin formato para un chat (generate function)
+        '''
         try:
             print(contextEmbedding)
             responseCall = await self.ollamaClient.generate(
@@ -52,12 +42,17 @@ class GeneralModel:
                 stream=False,
                 options={'num_predict': 200, 'temperature': 0.1, 'num_gpu':80}
             )
-           #print(f'response call: {responseCall}')
             return responseCall["response"]
         except Exception as e:
             return {"error": f"Error en la generación de respuesta: {str(e)}"}
 
     async def _callChatGenerate(self, message_user):
+        '''
+            funcion que se encarga de llamar a la api de ollama para generar la respuesta, y devuelve la respuesta
+
+            info: esta si tiene formato chat (chat function)
+            pd: consultar la documetnacion de chat de la libreria OpenIA
+        '''
         try:
             responseCall = await self.ollamaClient.chat(
                 model=self.MODELLM,
@@ -71,6 +66,11 @@ class GeneralModel:
             return {"error": f"Error en la generación de respuesta: {str(e)}"}
 
     async def _callEmbedding(self, prompt):
+        '''
+            funcion que se encarga de convertir el texto en un embedding, y devuelve el embedding
+
+            pd: consultar la documentacion  de como funciona los embeddings
+        '''
         try:
             responseEmbeddings = await self.ollamaClient.embeddings(
                 prompt=prompt, model=self.modelEmbedding
@@ -80,6 +80,10 @@ class GeneralModel:
             return {"error": f"Error en la obtención de embeddings: {str(e)}"}
 
     async def _responseEmbedding(self, userMessage, nameCollection):
+        '''
+            Es es la funcion que se encarga de obtener primero el embedding del mensaje entrante (convertirlo a numerico la respuesta).
+            Luego hace la consulta en la db de chroma para obtener una respuesta de la base de datos, con base a la similitud del mensaje del usuario
+        '''
         try:
             userMessageEmbedding = await self._callEmbedding(prompt=userMessage)
             Collection = self.ChromaClient.get_collection(name=nameCollection)
