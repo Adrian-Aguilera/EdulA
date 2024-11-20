@@ -23,7 +23,7 @@ class ControllerInter():
         if message:
             try:
                 InstanciaControllador= ControllerAsistenteChat()
-                mensajeObtenido = async_to_sync(InstanciaControllador.main_engine)(message)
+                mensajeObtenido = async_to_sync(InstanciaControllador.AsistenteChat)(message)
                 return mensajeObtenido
             except Exception as e:
                 return {"error": f"{str(e)}"}

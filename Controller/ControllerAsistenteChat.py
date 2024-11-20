@@ -9,18 +9,20 @@ class ControllerAsistenteChat:
     def __init__(self):
         self.FuncionesIA = FuncionesIA.FuncionesIA()
 
-    async def main_engine(self, message):
+    async def AsistenteChat(self, message):
         '''
-            llamada a la funcion main_engine de la clase FuncionesIA
-            llamada a la funcion _callChatGenerate de la clase FuncionesIA
+            llamada a la funcion AsistenteChat que hace la la llamada a las funciones de la clase FuncionesIA
         '''
         respuestaChat = await self.ResponseAsistenteChat(message)
         return respuestaChat
 
     async def ResponseAsistenteChat(self, message):
         '''
-            llamada a la funcion main_engine de la clase FuncionesIA
-            llamada a la funcion _callChatGenerate de la clase FuncionesIA
+            llamada a la funcion AsistenteChat de la clase FuncionesIA
+            llamada a la funcion _callChatGenerate de la clase FuncionesIA, para formato de chat de la respuesta
+
+            pd: el nombre de la coleccion previamente se debe crear con la informacion que tiene la DB principal, consultar el Swagger para crear la coleccion del asistente
+            pd: toma el nombre de la coleccion del asistente
         '''
         try:
             instancia = await sync_to_async(list)(AssistantCollection.objects.all())
