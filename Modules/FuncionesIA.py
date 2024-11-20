@@ -76,11 +76,17 @@ class FuncionesIA:
             pd: consultar la documetnacion de chat de la libreria OpenIA
         '''
         try:
+            settings_Asistente = await sync_to_async(SettingsChatAsistente.objects.select_related('Model_LLM').first)()
+            modelo = settings_Asistente.Model_LLM.model
+            max_tokens = settings_Asistente.max_Tokens
+            temperature = settings_Asistente.temperature
+            num_gpu = settings_Asistente.num_gpu
+            print(f'max tokens: {max_tokens} \n temperature: {temperature} \n num gpu: {num_gpu}')
             responseCall = await self.ollamaClient.chat(
-                model=self.MODELLM,
+                model=modelo,
                 messages=[{'role':'user','content':f'{message_user}'}],
                 stream=False,
-                options={'num_ctx': 150, 'temperature':0.5},
+                options={'num_ctx': int(max_tokens), 'temperature':float(temperature), 'num_gpu':int(num_gpu)},
             )
             print(f'response call: {responseCall}')
             return responseCall["message"]['content']
