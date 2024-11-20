@@ -1,4 +1,4 @@
-from Controller.ControllerApp import *
+from Controller.ControllerAsistenteChat import ControllerAsistenteChat
 from dotenv import load_dotenv
 from asgiref.sync import async_to_sync
 from django.http import JsonResponse
@@ -19,18 +19,16 @@ from .serializers import PerfilTokenObtainPairSerializer
 
 class ControllerInter():
     # Hacer que main_engine sea síncrono, llamando async_to_sync dentro de él
-    def main_engine(type_engine, message):
-        if not type_engine:
-            return "Faltan parámetros para inicializar el motor"
-
-        modeAV = type_engine.get("AV", None)
-
-        if modeAV is not None:
-            engine = ControllerEduIA(EngineAV=modeAV)
-            mensaje = async_to_sync(engine.main_engine)(message)
-            return mensaje
+    def ResponseAsistenteChat(message):
+        if message:
+            try:
+                InstanciaControllador= ControllerAsistenteChat()
+                mensajeObtenido = async_to_sync(InstanciaControllador.main_engine)(message)
+                return mensajeObtenido
+            except Exception as e:
+                return {"error": f"{str(e)}"}
         else:
-            return "Tipo de motor no definido correctamente"
+            return "Faltan parámetros para inicializar el chat del asistente"
 
     def insertarDatos(carnet, password):
         if not carnet or not password:
@@ -50,32 +48,6 @@ class ControllerInter():
 
 # Create your views here.
 class AsistEdula(APIView):
-    @swagger_auto_schema(
-        method='post',
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'id_users': openapi.Schema(type=openapi.TYPE_STRING),
-                'type_engine': openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        'EngineAV': openapi.Schema(type=openapi.TYPE_BOOLEAN),
-                    },
-                    required=['EngineAV']
-                ),
-                'id_message': openapi.Schema(type=openapi.TYPE_STRING),
-                'user_message': openapi.Schema(type=openapi.TYPE_STRING),
-                'history_chat': openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    properties={
-                        'system_response': openapi.Schema(type=openapi.TYPE_STRING),
-                        'user_response': openapi.Schema(type=openapi.TYPE_STRING)
-                    }
-                ),
-            },
-            required=['id_users', 'type_engine', 'id_message', 'user_message']
-        )
-    )
     @api_view(['POST'])
     @permission_classes([IsAuthenticated])
     def get_response_AV(request):

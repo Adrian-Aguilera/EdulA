@@ -1,24 +1,19 @@
 # Create your views here.
-from django.shortcuts import render
 from Modules.FuncionesIA import *
-from Controller.ControllerApp import *
 from dotenv import load_dotenv
-from asgiref.sync import async_to_sync
-import subprocess
 from django.http import JsonResponse
 #importacion de django-rest.
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 from rest_framework.views import APIView
-import json
+from ModelCustomApp.models import SettingLLM
 #ollama module
 from ollama import Client
 from dotenv import load_dotenv
 load_dotenv(override=True)
-ollamaClient = Client(host=str(os.environ.get("OLLAMACLIENT")))
+host = SettingLLM.objects.get().host
+ollamaClient = Client(host=host)
 class CustomModel(APIView):
     #enp para crear un modelCustom
     @api_view(['POST'])
@@ -88,16 +83,6 @@ class CustomModel(APIView):
         else:
             return Response({"Method": "Metodo no disponible"})
 
-    @api_view(['GET'])
-    def modelUsed(request):
-        if request.method == 'GET':
-            try:
-                modelUsed = os.environ.get('MODELLM')
-                return JsonResponse({'data': modelUsed})
-            except Exception as e:
-                return JsonResponse({'Exception error': str(e)})
-        else:
-            return Response({"Method": "Metodo no disponible"})
 
     @api_view(['POST'])
     def deleteModel(request):
