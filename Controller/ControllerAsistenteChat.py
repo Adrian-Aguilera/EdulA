@@ -14,8 +14,8 @@ class ControllerAsistenteChat:
             llamada a la funcion main_engine de la clase FuncionesIA
             llamada a la funcion _callChatGenerate de la clase FuncionesIA
         '''
-        mainFun = await self.FuncionesIA._callChatGenerate(message)
-        return mainFun
+        respuestaChat = await self.ResponseAsistenteChat(message)
+        return respuestaChat
 
     async def ResponseAsistenteChat(self, message):
         '''

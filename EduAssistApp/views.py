@@ -47,38 +47,24 @@ class ControllerInter():
         #return({"informacion": f'{nuevoEstudiante.carnet} se ha registrado'})
 
 # Create your views here.
-class AsistEdula(APIView):
+class AsistenteEdula(APIView):
     @api_view(['POST'])
     @permission_classes([IsAuthenticated])
-    def get_response_AV(request):
+    def AsistenteChat(request):
         if request.method == "POST":
             try:
                 data_requests = request.data
                 id_users = data_requests.get("id_users")
-                type_engine = data_requests.get("type_engine")
                 id_message = data_requests.get("id_message")
-                user_message = data_requests.get("user_message")
-                engine = ControllerInter.main_engine(type_engine, user_message)
+                mensaje = data_requests.get("mensaje")
+                print(f'id_users: {id_users} \n id_message: {id_message} \n user_message: {mensaje}')
+                engine = ControllerInter.ResponseAsistenteChat(message=mensaje)
                 return JsonResponse({"data": engine})
             except Exception as e:
                 return Response({"Error": "Fail get data"})
         else:
             return Response({"error": "metodo no disponible"})
 
-    @api_view(['POST'])
-    @permission_classes([IsAuthenticated])
-    def responseAsist(request):
-        if request.method == 'POST':
-            try:
-                dataRequest = request.data
-                type_engine = dataRequest.get("type_engine")
-                UserMessage = dataRequest.get('user_message')
-                responseMethod = ControllerInter.main_engine(type_engine=type_engine, message=UserMessage)
-                return JsonResponse({'data': responseMethod })
-            except Exception as e:
-                return JsonResponse({'Error Exception': str(e)})
-        else:
-            return JsonResponse({'Error method': 'metodo no disponible'})
 
 class LoginEstudiante(APIView):
     @api_view(['POST'])

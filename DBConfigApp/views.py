@@ -43,10 +43,10 @@ class DataToChromaDB(APIView):
             try:
                 dbController = ControllerDataBase()
                 configInstance = AssistantCollection.objects.all()
-                getNameCollection = configInstance[0].nameCollection
+                getNameCollection = configInstance[0].Nombre_Coleccion
                 getDataContent = DataAsistenteChat.objects.all()[0].dataContent
-                print(f'name Collection: {getNameCollection} \n')
-                print(f'data: {getDataContent} \n')
+                print(f'name Collection para Asistente: {getNameCollection} \n')
+                print(f'data de Asistente: {getDataContent} \n')
                 response = dbController.createDatabase(nameCollection=getNameCollection, dataContent=getDataContent)
                 return JsonResponse(response)
             except Exception as e:
