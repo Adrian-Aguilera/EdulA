@@ -3,5 +3,13 @@
         "./Embedings",
         "./Embedings",
         "./test/Embedings"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "EDULA",
+            "database": "${workspaceFolder:EdulA-Engine}/DB/db.sqlite3"
+        }
     ]
 }

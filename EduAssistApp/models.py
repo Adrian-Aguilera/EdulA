@@ -25,9 +25,12 @@ class Perfil(models.Model):
         self.password = make_password(raw_password)
         self.save()
 
+    def __str__(self):
+        return f'Estudiante: {self.carnet}'
+
 class ChatHistorial(models.Model):
     estudiante = models.ForeignKey(Perfil, on_delete=models.CASCADE)
-    conversation_id = models.IntegerField()
+    conversation_id = models.IntegerField(null=True)
     role = models.CharField(max_length=10, choices=[('user', 'User'), ('assistant', 'Assistant'), ('system', 'System')])
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
