@@ -11,7 +11,6 @@ class PerfilTokenObtainPairView(TokenObtainPairView):
 
 class LoginEstudiante(APIView):
     @api_view(['POST'])
-    @permission_classes([IsAuthenticated])
     def login(request):
         if request.method == 'POST':
             try:
@@ -20,7 +19,7 @@ class LoginEstudiante(APIView):
                 password = data.get('password')
                 serializerTokens = PerfilTokenObtainPairSerializer()
                 obtenerTokens = serializerTokens.validate(attrs={'carnet': carnet, 'password': password})
-                return Response(obtenerTokens)
+                return Response({"data": obtenerTokens})
             except Exception as e:
                 return Response({"Error Exception": f"{str(e)}"})
         else:
