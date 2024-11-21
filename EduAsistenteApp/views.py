@@ -1,17 +1,10 @@
 from Controller.ControllerAsistenteChat import ControllerAsistenteChat
-from django.db.models import Max
 from asgiref.sync import async_to_sync
-from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from drf_yasg import openapi
 from rest_framework.views import APIView
 
-#funcion para autenticar mis credenciales de estudiante
-from django.contrib.auth import authenticate
-
-from .serializers import ChatHistorialSerializer
 
 class ControllerInter():
     # Hacer que main_engine sea síncrono, llamando async_to_sync dentro de él
