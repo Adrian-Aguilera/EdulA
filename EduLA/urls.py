@@ -48,7 +48,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('EduGeneral/api/', include('EduGeneralApp.urls')),
-    path('EduAsistente/api/', include('EduAssistApp.urls')),
+    path('EduAsistente/api/', include('EduAsistenteApp.urls')),
+    path('LoginMetodos/api/', include('EduEstudianteApp.urls')),
 
     path('LLMS/', include('ModelCustomApp.urls')),
     path('Config/', include('DBConfigApp.urls')),
