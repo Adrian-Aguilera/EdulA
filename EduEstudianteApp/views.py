@@ -28,7 +28,7 @@ class LoginEstudiante(APIView):
             return Response({"Error Method": "metodo no permitido"})
 
     @api_view(['POST'])
-    def createCuenta(request):
+    def RegistrarEstudiante(request):
         if request.method == 'POST':
             try:
                 data = request.data
