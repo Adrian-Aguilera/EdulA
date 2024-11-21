@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import DataGeneralChat, DataAsistenteChat
 from EduGeneralApp.models import General_Collection
-from EduAssistApp.models import AssistantCollection
+from EduAsistenteApp.models import AssistantCollection
 
 '''
 Esta es una Vista que se encarga de crear la base de datos

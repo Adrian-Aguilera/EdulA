@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import Perfil
+from .models import PerfilEstudiante
 
 class PerfilTokenObtainPairSerializer(TokenObtainPairSerializer):
     carnet = serializers.CharField(required=True)  # Cambiar el campo a carnet
@@ -30,3 +30,16 @@ class PerfilTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise serializers.ValidationError(
                 {'detail': 'Must include "carnet" and "password"'}
             )
+
+class PerfilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerfilEstudiante
+        fields = ['carnet', 'password']
+
+    def create(self, validated_data):
+        password = validated_data.get('password')
+        instanciaPerfil = PerfilEstudiante(**validated_data)
+        #encriptar la contraseña
+        instanciaPerfil.set_password(raw_password=password)
+        instanciaPerfil.save()
+        return instanciaPerfil
