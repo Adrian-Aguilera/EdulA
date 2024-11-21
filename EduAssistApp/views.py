@@ -1,11 +1,10 @@
 from Controller.ControllerAsistenteChat import ControllerAsistenteChat
-from dotenv import load_dotenv
+from django.db.models import Max
 from asgiref.sync import async_to_sync
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.views import APIView
 
@@ -15,15 +14,16 @@ from .models import Perfil
 
 #importaciones para obtener tokens del de la tabla Perfil
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import PerfilTokenObtainPairSerializer
+from .serializers import PerfilTokenObtainPairSerializer, ChatHistorialSerializer
+from .models import Perfil, ChatHistorial
 
 class ControllerInter():
     # Hacer que main_engine sea síncrono, llamando async_to_sync dentro de él
-    def ResponseAsistenteChat(message):
-        if message:
+    def ResponseAsistenteChat(conversacionEstudiante):
+        if conversacionEstudiante:
             try:
                 InstanciaControllador= ControllerAsistenteChat()
-                mensajeObtenido = async_to_sync(InstanciaControllador.AsistenteChat)(message)
+                mensajeObtenido = async_to_sync(InstanciaControllador.AsistenteChat)(conversacion=conversacionEstudiante)
                 return mensajeObtenido
             except Exception as e:
                 return {"error": f"{str(e)}"}
@@ -46,24 +46,76 @@ class ControllerInter():
             return {"informacion": f'No se pudo registrar el estudiante. Error: {str(e)}'}
         #return({"informacion": f'{nuevoEstudiante.carnet} se ha registrado'})
 
-# Create your views here.
+
+class MetodosValidaciones():
+    def isExsistenteEstudiante(self, id_estudiante):
+        '''Una funcion para validar si el estudiante existe en la base de datos'''
+        estudiante = Perfil.objects.filter(id=id_estudiante)
+        if estudiante.exists():
+            return Perfil.objects.get(id=id_estudiante)
+        else:
+            return False
+
+    def isExsistenteConversacion(self, id_conversacion):
+        '''Una funcion para validar si la conversacion existe en la base de datos'''
+        conversacion = ChatHistorial.objects.filter(id=id_conversacion)
+        if conversacion.exists():
+            return ChatHistorial.objects.get(id=id_conversacion)
+        else:
+            return False
 class AsistenteEdula(APIView):
     @api_view(['POST'])
     @permission_classes([IsAuthenticated])
     def AsistenteChat(request):
         if request.method == "POST":
             try:
+                # Obtener datos del request
                 data_requests = request.data
-                id_users = data_requests.get("id_users")
-                id_message = data_requests.get("id_message")
+                id_estudiante = data_requests.get("id_estudiante")
+                id_conversacion = data_requests.get("id_conversacion")
                 mensaje = data_requests.get("mensaje")
-                print(f'id_users: {id_users} \n id_message: {id_message} \n user_message: {mensaje}')
-                engine = ControllerInter.ResponseAsistenteChat(message=mensaje)
-                return JsonResponse({"data": engine})
+                # Validar si el estudiante existe
+                estudiante = MetodosValidaciones().isExsistenteEstudiante(id_estudiante)
+                if not estudiante:
+                    return JsonResponse({"data": 'Estudiante no existe'})
+
+
+                if not id_conversacion:
+                    #crea una nueva conversacion si si id_conversacion es igual a Null en el json de entrada
+                    nueva_conversacion_id = ChatHistorial.objects.aggregate(Max('conversation_id'))['conversation_id__max']
+                    id_conversacion = (nueva_conversacion_id + 1) if nueva_conversacion_id else 1
+
+                isConversacionExistente = ChatHistorial.objects.filter(conversation_id=id_conversacion).exists()
+
+                #guardar el mensaje del estudiante en la base de datos
+                mensajeEstudiante = ChatHistorial.objects.create(
+                    estudiante=estudiante,
+                    conversation_id=id_conversacion,
+                    role='user',
+                    content=mensaje
+                )
+
+                #obtener el historial de mensajes del estudiante
+                historialMensajes = ChatHistorial.objects.filter(conversation_id=id_conversacion)
+                #formatear para enviarlo al asistente
+                conversacion = [
+                    {'role': mensajeEstudiante.role, 'content': mensajeEstudiante.content}
+                    for mensajeEstudiante in historialMensajes
+                ]
+                print(f'conversacion: {conversacion}')
+                asistenteIA = ControllerInter.ResponseAsistenteChat(conversacionEstudiante=conversacion)
+                '''
+                AsistenteEdula = ChatHistorial.objects.create(estudiante=estudiante, conversation_id=id_conversacion, role='assistant', content=asistenteIA)
+                return Response({
+                    "Estudiante_Mensaje": ChatHistorialSerializer(mensajeEstudiante).data,
+                    "Asistente_Edula": ChatHistorialSerializer(AsistenteEdula).data
+                })'''
+                return JsonResponse({"data": asistenteIA})
             except Exception as e:
-                return Response({"Error": "Fail get data"})
+                return Response({"Error": f'{str(e)}'})
         else:
-            return Response({"error": "metodo no disponible"})
+            return Response({"error": "Método no disponible"})
+
 
 
 class LoginEstudiante(APIView):

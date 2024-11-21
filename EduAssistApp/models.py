@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password, make_password
-
 # Create your models here.
 class AssistantCollection(models.Model):
     Nombre_Coleccion = models.CharField(max_length=255, help_text='Ingresa el nombre de la colleccion para el asistente')
@@ -25,3 +24,13 @@ class Perfil(models.Model):
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
         self.save()
+
+class ChatHistorial(models.Model):
+    estudiante = models.ForeignKey(Perfil, on_delete=models.CASCADE)
+    conversation_id = models.IntegerField()
+    role = models.CharField(max_length=10, choices=[('user', 'User'), ('assistant', 'Assistant'), ('system', 'System')])
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.role} - {self.content[:50]}"

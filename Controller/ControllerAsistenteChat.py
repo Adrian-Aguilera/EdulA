@@ -9,14 +9,14 @@ class ControllerAsistenteChat:
     def __init__(self):
         self.FuncionesIA = FuncionesIA.FuncionesIA()
 
-    async def AsistenteChat(self, message):
+    async def AsistenteChat(self, conversacion):
         '''
             llamada a la funcion AsistenteChat que hace la la llamada a las funciones de la clase FuncionesIA
         '''
-        respuestaChat = await self.ResponseAsistenteChat(message)
+        respuestaChat = await self.ResponseAsistenteChat(conversacion)
         return respuestaChat
 
-    async def ResponseAsistenteChat(self, message):
+    async def ResponseAsistenteChat(self, conversacion):
         '''
             llamada a la funcion AsistenteChat de la clase FuncionesIA
             llamada a la funcion _callChatGenerate de la clase FuncionesIA, para formato de chat de la respuesta
@@ -27,8 +27,9 @@ class ControllerAsistenteChat:
         try:
             instancia = await sync_to_async(list)(AssistantCollection.objects.all())
             nameCollection = instancia[0].Nombre_Coleccion
-            EmbeddingsData = await self.FuncionesIA._responseEmbedding(userMessage=message, nameCollection=nameCollection)
-            responseGenerate = await self.FuncionesIA._callChatGenerate(message_user=message, contextEmbedding=EmbeddingsData)
+            print(f'conversacion desde el controllador asistente: {conversacion}')
+            EmbeddingsData = await self.FuncionesIA._responseEmbedding(userMessage=conversacion, nameCollection=nameCollection)
+            responseGenerate = await self.FuncionesIA._callChatGenerate(conversacion_Estudiante=conversacion, contextEmbedding=EmbeddingsData)
             if 'error' in EmbeddingsData:
                 return ({'error': EmbeddingsData['error']})
             elif 'error' in responseGenerate:
