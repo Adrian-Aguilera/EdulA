@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'EduGeneralApp',
     'EduAssistApp',
     'EduAsistenteApp',
+    'EduEstudianteApp',
     'DBConfigApp',
     'ModelCustomApp',
     'rest_framework',
@@ -165,7 +166,7 @@ CORS_ALLOWED_ORIGINS = [
 
 #autenticacion para login, tanto para el modelo User predeterminado de django y los customs
 AUTHENTICATION_BACKENDS = [
-    'EduAssistApp.backends.PerfilBackend', #validacion para mi apliacion que apunta a mi modelo perfil
+    'EduEstudianteApp.backends.PerfilBackend', #validacion para mi apliacion que apunta a mi modelo perfil
     'django.contrib.auth.backends.ModelBackend',  # Si quieres seguir usando el modelo User de Django el predeterminado
 ]
 
