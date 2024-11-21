@@ -1,5 +1,5 @@
 import Modules.FuncionesIA as FuncionesIA
-from EduAssistApp.models import AssistantCollection
+from EduAsistenteApp.models import AssistantCollection
 from asgiref.sync import sync_to_async
 from dotenv import load_dotenv
 import os
