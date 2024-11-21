@@ -10,11 +10,8 @@ from rest_framework.views import APIView
 
 #funcion para autenticar mis credenciales de estudiante
 from django.contrib.auth import authenticate
-from .models import Perfil
 
-#importaciones para obtener tokens del de la tabla Perfil
-from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import PerfilTokenObtainPairSerializer, ChatHistorialSerializer
+from .serializers import ChatHistorialSerializer
 from .models import Perfil, ChatHistory
 
 class ControllerInter():
@@ -115,39 +112,3 @@ class AsistenteEdula(APIView):
                 return Response({"Error": f'{str(e)}'})
         else:
             return Response({"error": "Método no disponible"})
-
-
-
-class LoginEstudiante(APIView):
-    @api_view(['POST'])
-    def login(request):
-        if request.method == 'POST':
-            try:
-                data = request.data
-                carnet = data.get('carnet')
-                password = data.get('password')
-                serializerTokens = PerfilTokenObtainPairSerializer()
-                obtenerTokens = serializerTokens.validate(attrs={'carnet': carnet, 'password': password})
-                return JsonResponse(obtenerTokens)
-            except Exception as e:
-                return JsonResponse({"Error Exception": f"{str(e)}"})
-        else:
-            return JsonResponse({"Error Method": "metodo no permitido"})
-
-    @api_view(['POST'])
-    def createCuenta(request):
-        if request.method == 'POST':
-            try:
-                data = request.data
-                carnet = data.get('carnet')
-                password = data.get('pass')
-                insertarDatos = ControllerInter.insertarDatos(carnet=carnet, password=password)
-                return JsonResponse({"datos": insertarDatos})
-            except Exception as e:
-                return JsonResponse({"Error Exception": f"{str(e)}"})
-        else:
-            return JsonResponse({"Error Method": "metodo no permitido"})
-
-
-class PerfilTokenObtainPairView(TokenObtainPairView):
-    serializer_class = PerfilTokenObtainPairSerializer

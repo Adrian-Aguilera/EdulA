@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'EduGeneralApp',
     'EduAssistApp',
+    'EduAsistenteApp',
     'DBConfigApp',
     'ModelCustomApp',
     'rest_framework',

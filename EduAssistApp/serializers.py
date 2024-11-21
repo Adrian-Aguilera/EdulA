@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import Perfil, ChatHistorial
+from .models import Perfil, ChatHistory
 
 class PerfilTokenObtainPairSerializer(TokenObtainPairSerializer):
     carnet = serializers.CharField(required=True)  # Cambiar el campo a carnet
@@ -33,7 +33,7 @@ class PerfilTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class ChatHistorialSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ChatHistorial
+        model = ChatHistory
         fields = '__all__'
 
 class EstudianteIsExistenteSerializer(serializers.ModelSerializer):
