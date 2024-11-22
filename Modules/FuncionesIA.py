@@ -68,7 +68,7 @@ class FuncionesIA:
         except Exception as e:
             return {"error": f"Error en la generación de respuesta: {str(e)}"}
 
-    async def _callChatGenerate(self, conversacion_Estudiante, contextEmbedding=None):
+    async def _callChatGenerate(self, pregunta, contextEmbedding=None):
         '''
             funcion que se encarga de llamar a la api de ollama para generar la respuesta, y devuelve la respuesta
 
@@ -86,7 +86,7 @@ class FuncionesIA:
             if contextEmbedding:
                 messages.append({'role': 'system', 'content': f"Esta es la información del contexto: {contextEmbedding}"})
             # Añadir el mensaje del usuario al historial de mensajes
-            messages.append(conversacion_Estudiante)
+            messages.append(pregunta)
             responseCall = await self.ollamaClient.chat(
                 model=modelo,
                 messages=messages,
@@ -94,8 +94,7 @@ class FuncionesIA:
                 options={'num_ctx': int(max_tokens), 'temperature':float(temperature), 'num_gpu':int(num_gpu)},
             )
             print(f'contextEmbedding: {contextEmbedding}')
-            print(f'conversacion: {conversacion_Estudiante}')
-            print(f'mensajes: {messages}')
+            print(f'pregunta entrante: {pregunta}')
             return responseCall["message"]['content']
         except Exception as e:
             return {"error": f"Error en la generación de respuesta: {str(e)}"}
