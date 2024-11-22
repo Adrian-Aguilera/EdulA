@@ -31,7 +31,7 @@ class ControllerAsistenteChat:
             formatoChat = {'role': 'user', 'content': pregunta}
             print(f'formato chat: {formatoChat}')
             #le pasa el formato de usuario y el contexto que lo toma de la repuesta del embedding
-            respuestaChat = await self.FuncionesIA._callChatGenerate(conversacion_Estudiante=formatoChat, contextEmbedding=EmbeddingsData)
+            respuestaChat = await self.FuncionesIA._callChatGenerate(pregunta=formatoChat, contextEmbedding=EmbeddingsData)
             if 'error' in EmbeddingsData:
                 return ({'error': EmbeddingsData['error']})
             elif 'error' in respuestaChat:
