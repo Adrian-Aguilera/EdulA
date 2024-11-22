@@ -45,7 +45,7 @@ class ControllerAsistenteChat:
             if isinstance(respuestaChat, dict) and 'error' in respuestaChat:
                 return {"error": respuestaChat['error']}
 
-            return {"response": respuestaChat}
+            return respuestaChat
 
         except Exception as e:
             return {"error chat": f"{str(e)}"}

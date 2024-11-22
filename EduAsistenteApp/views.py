@@ -58,7 +58,10 @@ class AsistenteEdula(APIView):
                 pregunta_obj = PreguntasEstudiante.objects.create(estudiante=isEstudiante, preguntas=pregunta)
                 RespuestasAsistenteEdula.objects.create(estudiante=isEstudiante, preguntas=pregunta_obj, respuesta=respuesta_Asistente)
 
-                return Response({"data": respuesta_Asistente})
+                return Response({"data": {
+                    "respuesta": respuesta_Asistente,
+                    "pregunta": pregunta
+                }})
             except Exception as e:
                 return Response({"Error": f'{str(e)}'})
         else:
