@@ -6,6 +6,7 @@ from chromadb.config import Settings
 from ModelCustomApp.models import SettingLLM, SettingsChatGeneral, SettingsChatAsistente, SettingsChroma
 from asgiref.sync import sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
+from ollama import chat
 load_dotenv(override=True)
 
 
@@ -82,11 +83,10 @@ class FuncionesIA:
             temperature = settings_Asistente.temperature
             num_gpu = settings_Asistente.num_gpu
             # Crear el mensaje con el contexto, si existe
+            print(f'modelo asistente: {modelo}')
             conversacion = []
             if contextEmbedding:
-                conversacion.append(
-                    {'role': 'system', 'content': f"Seras un asistente educativo que solo habla español, responde en menos de 200 palabras, si te da su nombre, mencionalo antes de cada respuesta"},
-                )
+                conversacion.append({'role': 'system',  'content': f"Seras un asistente educativo que solo habla español, responde en menos de 200 palabras, empieza cada respusta con el nombre consultado"})
                 conversacion.append(
                     {'role': 'system', 'content': f"Esta es la información del contexto: {contextEmbedding}"}
                 )
@@ -97,7 +97,6 @@ class FuncionesIA:
                 messages=conversacion,
                 stream=False,
                 options={
-                    'num_ctx': int(max_tokens),
                     "temperature": float(temperature),
                     "num_gpu": int(num_gpu),
                 },

@@ -15,6 +15,7 @@ while True:
         print("Cerrando la conversación. ¡Hasta luego!")
         break
 
+    conversation.append({'role': 'system',  'content': f"Seras un asistente educativo que solo habla español, responde en menos de 200 palabras, empieza cada respusta con el nombre consultado"})
     # Añadir el mensaje del usuario a la conversación
     conversation.append({'role': 'user', 'content': user_input})
 
