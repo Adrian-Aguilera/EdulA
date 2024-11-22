@@ -97,7 +97,7 @@ class FuncionesIA:
                 messages=conversacion,
                 stream=False,
                 options={
-                    #'num_ctx': int(max_tokens),
+                    'num_ctx': int(max_tokens),
                     "temperature": float(temperature),
                     "num_gpu": int(num_gpu),
                 },
