@@ -38,10 +38,11 @@ class ControllerAsistenteChat:
             if not EmbeddingsData or 'error' in EmbeddingsData:
                 return {"error": EmbeddingsData.get('error', 'Error al obtener el embedding.')}
 
+            print(f'contexto de embedding: {EmbeddingsData}')
             # Añadir la pregunta al historial
-            historial.append({"role": "user", "content": pregunta})
+            historial.append({"role": "user", "content": f"Usa esta informacion: {EmbeddingsData}. Responde a este mensaje: {pregunta}"})
             # Llamar a la API para generar la respuesta del asistente
-            respuestaChat = await self.FuncionesIA._callChatGenerate(pregunta=historial, contextEmbedding=EmbeddingsData)
+            respuestaChat = await self.FuncionesIA._callChatGenerate(pregunta=historial)
             if isinstance(respuestaChat, dict) and 'error' in respuestaChat:
                 return {"error": respuestaChat['error']}
 

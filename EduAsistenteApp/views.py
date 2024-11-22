@@ -102,6 +102,24 @@ class AsistenteEdula(APIView):
                 return Response({"Error": f'{str(e)}'})
         else:
             return Response({"error": "Método no disponible"})
+
+    @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
+    def limpiarHistorial(request, id=None):
+        if request.method == "GET":
+            try:
+                #mandar el id del estudiante para borrar sus mensajes anteriores
+                estudiante = MetodosValidaciones().isExsistenteEstudiante(id)
+                if not estudiante:
+                    return Response({"data": 'Estudiante no existe'})
+                preguntas = PreguntasEstudiante.objects.filter(estudiante=estudiante)
+                for pregunta in preguntas:
+                    pregunta.delete()
+                return Response({"data": "Historial borrado"})
+            except Exception as e:
+                return Response({"Error": f'{str(e)}'})
+        else:
+            return Response({"error": "Método no disponible"})
 class MetodosValidaciones():
     def isExsistenteEstudiante(self, id_estudiante):
         try:
