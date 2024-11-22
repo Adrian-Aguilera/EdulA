@@ -85,13 +85,13 @@ class FuncionesIA:
             conversacion = []
             if contextEmbedding:
                 conversacion.append(
-                    {'role': 'system', 'content': f"Seras un asistente educativo que solo habla español"},
+                    {'role': 'system', 'content': f"Seras un asistente educativo que solo habla español, responde en menos de 200 palabras, si te da su nombre, mencionalo antes de cada respuesta"},
                 )
                 conversacion.append(
                     {'role': 'system', 'content': f"Esta es la información del contexto: {contextEmbedding}"}
                 )
             # Añadir el mensaje del usuario al historial de mensajes
-            conversacion.append(pregunta)
+            conversacion+=pregunta
             responseCall = await self.ollamaClient.chat(
                 model=modelo,
                 messages=conversacion,
@@ -103,7 +103,7 @@ class FuncionesIA:
             print(f'Conversacion: {conversacion} \n')
             return responseCall["message"]['content']
         except Exception as e:
-            return {"error": f"Error en la generación de respuesta: {str(e)}"}
+            return {"error": f"{str(e)}"}
 
     async def _callEmbedding(self, prompt):
         '''

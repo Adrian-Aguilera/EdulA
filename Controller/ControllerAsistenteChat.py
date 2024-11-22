@@ -9,14 +9,14 @@ class ControllerAsistenteChat:
     def __init__(self):
         self.FuncionesIA = FuncionesIA.FuncionesIA()
 
-    async def AsistenteChat(self, conversacion):
+    async def AsistenteChat(self, conversacion, historial):
         '''
             llamada a la funcion AsistenteChat que hace la la llamada a las funciones de la clase FuncionesIA
         '''
-        respuestaChat = await self.ResponseAsistenteChat(pregunta=conversacion)
+        respuestaChat = await self.ResponseAsistenteChat(pregunta=conversacion, historial=historial)
         return respuestaChat
 
-    async def ResponseAsistenteChat(self, pregunta):
+    async def ResponseAsistenteChat(self, pregunta, historial:list):
         '''
             llamada a la funcion AsistenteChat de la clase FuncionesIA
             llamada a la funcion _callChatGenerate de la clase FuncionesIA, para formato de chat de la respuesta
@@ -25,18 +25,27 @@ class ControllerAsistenteChat:
             pd: toma el nombre de la coleccion del asistente
         '''
         try:
+            # Obtener la colección del asistente
             instancia = await sync_to_async(list)(AssistantCollection.objects.all())
+            if not instancia:
+                return {"error": "No se encontró ninguna colección de asistente disponible."}
+
             nameCollection = instancia[0].Nombre_Coleccion
+
+            print(f'pregunta a la cual se hara embedding: {pregunta}')
+            # Obtener el contexto de embedding
             EmbeddingsData = await self.FuncionesIA._responseEmbedding(userMessage=pregunta, nameCollection=nameCollection)
-            formatoChat = {'role': 'user', 'content': pregunta}
-            print(f'formato chat: {formatoChat}')
-            #le pasa el formato de usuario y el contexto que lo toma de la repuesta del embedding
-            respuestaChat = await self.FuncionesIA._callChatGenerate(pregunta=formatoChat, contextEmbedding=EmbeddingsData)
-            if 'error' in EmbeddingsData:
-                return ({'error': EmbeddingsData['error']})
-            elif 'error' in respuestaChat:
-                return ({'error': respuestaChat['error']})
-            else:
-                return ({'response': respuestaChat})
+            if not EmbeddingsData or 'error' in EmbeddingsData:
+                return {"error": EmbeddingsData.get('error', 'Error al obtener el embedding.')}
+
+            # Añadir la pregunta al historial
+            historial.append({"role": "user", "content": pregunta})
+            # Llamar a la API para generar la respuesta del asistente
+            respuestaChat = await self.FuncionesIA._callChatGenerate(pregunta=historial, contextEmbedding=EmbeddingsData)
+            if isinstance(respuestaChat, dict) and 'error' in respuestaChat:
+                return {"error": respuestaChat['error']}
+
+            return {"response": respuestaChat}
+
         except Exception as e:
             return {"error chat": f"{str(e)}"}

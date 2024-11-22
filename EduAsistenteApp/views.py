@@ -9,11 +9,11 @@ from .models import PreguntasEstudiante, RespuestasAsistenteEdula
 
 class ControllerInter():
     # Hacer que main_engine sea síncrono, llamando async_to_sync dentro de él
-    def ResponseAsistenteChat(conversacionEstudiante):
-        if conversacionEstudiante:
+    def ResponseAsistenteChat(pregunta, historial):
+        if pregunta:
             try:
                 InstanciaControllador= ControllerAsistenteChat()
-                mensajeObtenido = async_to_sync(InstanciaControllador.AsistenteChat)(conversacion=conversacionEstudiante)
+                mensajeObtenido = async_to_sync(InstanciaControllador.AsistenteChat)(conversacion=pregunta, historial=historial)
                 return mensajeObtenido
             except Exception as e:
                 return {"error": f"{str(e)}"}
@@ -37,7 +37,7 @@ class AsistenteEdula(APIView):
                 if not isEstudiante:
                     return Response({"data": 'Estudiante no existe'})
 
-                historial = [{"role": "system", "content": "Eres un asistente útil."}]
+                historial = []
 
                 preguntas_anteriores = PreguntasEstudiante.objects.filter(estudiante=isEstudiante)
                 for pregunta_obj in preguntas_anteriores:
@@ -45,16 +45,20 @@ class AsistenteEdula(APIView):
                     respuesta_obj = RespuestasAsistenteEdula.objects.filter(preguntas=pregunta_obj).first()
                     if respuesta_obj:
                         historial.append({"role": "assistant", "content": respuesta_obj.respuesta})
-                #pregunta actual del estudiante (la entrante del json)
-                historial.append({"role": "user", "content": pregunta})
-                #ahora mandar a llamar la funcion del asistente para que procese la conversacion
-                respuesta_Asistente = 'una respuesta del asistente'
 
+                #ahora mandar a llamar la funcion del asistente para que procese la conversacion
+                #le peudo mandar solo la pregunta y desde el controlador añadirle el formato
+                try:
+                    respuesta_Asistente = ControllerInter.ResponseAsistenteChat(pregunta=pregunta, historial=historial)
+                    if 'error' in respuesta_Asistente:
+                        return Response({"Error": f'{str(e)}'})
+                except Exception as e:
+                    return Response({"Error": f'{str(e)}'})
                 #guardar la la pregunta entrante y la respuesta del asistente
                 pregunta_obj = PreguntasEstudiante.objects.create(estudiante=isEstudiante, preguntas=pregunta)
                 RespuestasAsistenteEdula.objects.create(estudiante=isEstudiante, preguntas=pregunta_obj, respuesta=respuesta_Asistente)
 
-                return Response({"data": historial})
+                return Response({"data": respuesta_Asistente})
             except Exception as e:
                 return Response({"Error": f'{str(e)}'})
         else:
