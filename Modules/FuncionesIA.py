@@ -96,7 +96,11 @@ class FuncionesIA:
                 model=modelo,
                 messages=conversacion,
                 stream=False,
-                options={'num_ctx': int(max_tokens), 'temperature':float(temperature), 'num_gpu':int(num_gpu)},
+                options={
+                    #'num_ctx': int(max_tokens),
+                    "temperature": float(temperature),
+                    "num_gpu": int(num_gpu),
+                },
             )
             print(f'contextEmbedding: {contextEmbedding}\n')
             print(f'pregunta entrante: {pregunta}\n')
@@ -134,7 +138,7 @@ class FuncionesIA:
                 query_embeddings=[userMessageEmbedding["embedding"]], n_results=1
             )
             respuesta = results["documents"][0][0]
-            #print('respuesta embeding: ',respuesta)
+            # print('respuesta embeding: ',respuesta)
             return respuesta
         except Exception as e:
             return {"error": f"Error en la respuesta de embedding: {str(e)}"}
