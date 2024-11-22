@@ -15,13 +15,12 @@ while True:
         print("Cerrando la conversación. ¡Hasta luego!")
         break
 
-    conversation.append({'role': 'system',  'content': f"Seras un asistente educativo que solo habla español, responde en menos de 200 palabras, si te da su nombre, mencionalo antes de cada respuesta"})
     # Añadir el mensaje del usuario a la conversación
     conversation.append({'role': 'user', 'content': user_input})
 
     # Hacer la consulta al modelo sin modo stream
     response = chat(
-        model='llama2:chat',
+        model='PI-Edula:Chat',
         messages=conversation,
         stream=False,
         options={
