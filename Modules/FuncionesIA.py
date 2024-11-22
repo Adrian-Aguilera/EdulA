@@ -82,19 +82,25 @@ class FuncionesIA:
             temperature = settings_Asistente.temperature
             num_gpu = settings_Asistente.num_gpu
             # Crear el mensaje con el contexto, si existe
-            messages = []
+            conversacion = []
             if contextEmbedding:
-                messages.append({'role': 'system', 'content': f"Esta es la información del contexto: {contextEmbedding}"})
+                conversacion.append(
+                    {'role': 'system', 'content': f"Seras un asistente educativo que solo habla español"},
+                )
+                conversacion.append(
+                    {'role': 'system', 'content': f"Esta es la información del contexto: {contextEmbedding}"}
+                )
             # Añadir el mensaje del usuario al historial de mensajes
-            messages.append(pregunta)
+            conversacion.append(pregunta)
             responseCall = await self.ollamaClient.chat(
                 model=modelo,
-                messages=messages,
+                messages=conversacion,
                 stream=False,
                 options={'num_ctx': int(max_tokens), 'temperature':float(temperature), 'num_gpu':int(num_gpu)},
             )
-            print(f'contextEmbedding: {contextEmbedding}')
-            print(f'pregunta entrante: {pregunta}')
+            print(f'contextEmbedding: {contextEmbedding}\n')
+            print(f'pregunta entrante: {pregunta}\n')
+            print(f'Conversacion: {conversacion} \n')
             return responseCall["message"]['content']
         except Exception as e:
             return {"error": f"Error en la generación de respuesta: {str(e)}"}
