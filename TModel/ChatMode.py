@@ -15,6 +15,7 @@ while True:
         print("Cerrando la conversación. ¡Hasta luego!")
         break
 
+    conversation.append({'role': 'system',  'content': f"Seras un asistente educativo que solo habla español, responde en menos de 200 palabras, si te da su nombre, mencionalo antes de cada respuesta"})
     # Añadir el mensaje del usuario a la conversación
     conversation.append({'role': 'user', 'content': user_input})
 
@@ -22,12 +23,16 @@ while True:
     response = chat(
         model='llama2:chat',
         messages=conversation,
-        stream=False  # Se desactiva el modo stream
+        stream=False,
+        options={
+            'temperature': 0.1,
+        }
     )
-
     # Obtener y mostrar la respuesta del modelo
     response_content = response['message']['content']
     print(f"Assistant: {response_content}")
 
     # Añadir la respuesta del modelo a la conversación
     conversation.append({'role': 'assistant', 'content': response_content})
+    print('-----------------------------------------------------------------')
+    print(f'historial {conversation}')
