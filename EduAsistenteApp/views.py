@@ -81,6 +81,20 @@ class AsistenteEdula(APIView):
         else:
             return Response({"error": "Método no disponible"})
 
+    @api_view(['POST'])
+    @permission_classes([IsAuthenticated])
+    def chat(request):
+        if request.method == "POST":
+            try:
+                data = request.data
+                mensaje = data.get('mensaje')
+                respuestaEdula = ControllerInter.ResponseAsistenteChat(mensaje)
+                print(f'respuesta de vista asistente: {respuestaEdula}')
+                return Response({"data": respuestaEdula})
+            except Exception as e:
+                return Response({"Error": f'{str(e)}'})
+        else:
+            return Response({"error": "Método no disponible"})
 class MetodosValidaciones():
     def isExsistenteEstudiante(self, id_estudiante):
         try:
