@@ -69,7 +69,7 @@ class FuncionesIA:
         except Exception as e:
             return {"error": f"Error en la generación de respuesta: {str(e)}"}
 
-    async def _callChatGenerate(self, pregunta):
+    async def _callChatGenerate(self, historial, contexto=None):
         '''
             funcion que se encarga de llamar a la api de ollama para generar la respuesta, y devuelve la respuesta
 
@@ -85,8 +85,10 @@ class FuncionesIA:
             # Crear el mensaje con el contexto, si existe
             print(f'modelo asistente: {modelo}')
             conversacion = []
+            if contexto:
+                conversacion.append({"role": "system", "content": f'Eres un asistente virtual llamado Edula creado por ITCA FEPADE en El Salvador y solo hablas en español. Tu función es proporcionar asistencia estrictamente en temas educativos Debes mantener un enfoque educativo en todas tus respuestas o respuestas fuera de tema. Ademas responde con menos de 200 palabras, empieza cada respuesta con el nombre con base a la conversacion. Esta es la informacion de contexto: {contexto}'})
             # Añadir el mensaje del usuario al historial de mensajes
-            conversacion+=pregunta
+            conversacion+=historial
             responseCall = await self.ollamaClient.chat(
                 model=modelo,
                 messages=conversacion,
@@ -97,8 +99,8 @@ class FuncionesIA:
                     "num_gpu": int(num_gpu),
                 },
             )
-            print(f'pregunta entrante: {pregunta}\n')
-            print(f'Conversacion: {conversacion} \n')
+            print(f'pregunta entrante: {historial}')
+            print(f'temp: {temperature} \n num gpu: {num_gpu}')
             return responseCall["message"]['content']
         except Exception as e:
             return {"error": f"{str(e)}"}
@@ -136,3 +138,19 @@ class FuncionesIA:
             return respuesta
         except Exception as e:
             return {"error": f"Error en la respuesta de embedding: {str(e)}"}
+
+    async def _checkResponse(self, documento, claim):
+        '''
+            Necesitamos verificar la informacion de la respuesta generada es consistente con la informacion existnete en la bade de datos
+        '''
+        try:
+            prompt =f'Document: {documento} \n Claim: {claim}'
+            response = await self.ollamaClient.generate(
+                model='bespoke-minicheck',
+                prompt=prompt,
+                stream=False,
+                options={'num_predict': int(2), 'temperature': float(0.0), 'num_gpu':int(1)}
+            )
+            return response["response"].strip()
+        except Exception as e:
+            return {"error": f"Error en la verificacion de la respuesta: {str(e)}"}
