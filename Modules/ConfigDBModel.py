@@ -30,8 +30,9 @@ class ModelDB:
                 try:
                     response = async_to_sync(generalObj._callEmbedding)(prompt=d.strip())
                     embedding = response["embedding"]
+                    id_unico = f'{nameCollection}_{i}'
                     Collection.add(
-                        ids=[str(i)],
+                        ids=[id_unico],
                         embeddings=[embedding],
                         documents=[d.strip()]
                     )
