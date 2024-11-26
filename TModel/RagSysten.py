@@ -8,7 +8,7 @@ def main():
     while True:
         mensaje = input('Ingresa una duda: ')
         contexto = obtenerContexto(mensaje=mensaje)
-        conversacion = [{'role': 'system', 'content':f'con base a este contexto {contexto}, response la pregunta, solo en español'}]
+        conversacion = [{'role': 'system', 'content':f'context: {contexto}, only response in spanish'}]
         conversacion.append({'role': 'user', 'content': mensaje})
         response = ollama.chat(
             model='llama2:chat',
@@ -19,6 +19,7 @@ def main():
         for chunk in response:
             print(chunk['message']['content'], end='', flush=True)
         print('\n')
+        print(f'conversacion: {conversacion}')
 
 def createCollection():
     client = chromadb.Client(settings=configuracion)
@@ -26,6 +27,7 @@ def createCollection():
     documentos = [
         {"id": '1', "content": "Python es un lenguaje de programación popular para el desarrollo web y análisis de datos."},
         {"id": '2', "content": "Django es un framework de Python para desarrollo rápido de aplicaciones web."},
+        {"id": '3', "content": "No se ha encontrado ningun resultado  similar"},
     ]
 
     for doc in documentos:
@@ -50,10 +52,10 @@ def obtenerContexto(mensaje):
     mensaje_Embedding = createEmbeddings(texto=mensaje)
     resultados = collection.query(
         query_embeddings=mensaje_Embedding,
-        n_results=1
+        n_results=2
     )
-    contexto = resultados["metadatas"]
-    print(f'contexto: {contexto[0]}')
+    contexto = resultados["metadatas"][0][0]
+    print(f'contexto: {contexto}')
     return contexto
 
 def eliminarCollection():
