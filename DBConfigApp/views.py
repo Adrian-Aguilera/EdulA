@@ -1,13 +1,14 @@
 from Modules.FuncionesIA import *
 from Controller.DBController import ControllerDataBase
-from django.http import JsonResponse
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import DataGeneralChat, DataAsistenteChat
 from EduGeneralApp.models import General_Collection
 from EduAsistenteApp.models import AssistantCollection
+from .models import DocumentosRagGeneral
+from .serializers import DocumentosRagGeneralSerializer
 
 '''
 Esta es una Vista que se encarga de crear la base de datos
@@ -24,13 +25,18 @@ class DataToChromaDB(APIView):
         '''
         if request.method == "GET":
             try:
-                dbController = ControllerDataBase()
-                configInstance = General_Collection.objects.all()
-                getNameCollection = configInstance[0].Nombre_Coleccion
-                getDataContent = DataGeneralChat.objects.all()[0].dataContent
-                print(f'data: {getNameCollection}')
-                response = dbController.createDatabase(nameCollection=getNameCollection, dataContent=getDataContent)
-                return JsonResponse(response)
+                controller = ControllerDataBase()
+                documentos = DocumentosRagGeneral.objects.all()
+                DocumentosSerializer = DocumentosRagGeneralSerializer(documentos, many=True)
+                nombre_coleccion  = General_Collection.objects.all().first().Nombre_Coleccion
+                crear_coleccion = controller.createCollection(
+                    documentos=DocumentosSerializer.data,
+                    nombre_Coleccion=nombre_coleccion
+                )
+                if crear_coleccion.get('success'):
+                    return Response({"success": "Coleccion Embedding creada Exitosamente"})
+                else:
+                    return Response({"error": crear_coleccion.get('error')})
             except Exception as e:
                 return Response({"Error": f"{str(e)}"})
         else:
@@ -44,11 +50,11 @@ class DataToChromaDB(APIView):
                 dbController = ControllerDataBase()
                 configInstance = AssistantCollection.objects.all()
                 getNameCollection = configInstance[0].Nombre_Coleccion
-                getDataContent = DataAsistenteChat.objects.all()[0].dataContent
+                #getDataContent = DataAsistenteChat.objects.all()[0].dataContent
                 print(f'name Collection para Asistente: {getNameCollection} \n')
-                print(f'data de Asistente: {getDataContent} \n')
-                response = dbController.createDatabase(nameCollection=getNameCollection, dataContent=getDataContent)
-                return JsonResponse(response)
+                #print(f'data de Asistente: {getDataContent} \n')
+                #response = dbController.createDatabase(nameCollection=getNameCollection, dataContent=getDataContent)
+                return Response({"success": "Base de datos creada Exitosamente"})
             except Exception as e:
                 return Response({"Error": f"{str(e)}"})
         else:

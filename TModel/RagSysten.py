@@ -11,7 +11,7 @@ def main():
         conversacion = [{'role': 'system', 'content':f'context: {contexto}, only response in spanish'}]
         conversacion.append({'role': 'user', 'content': mensaje})
         response = ollama.chat(
-            model='llama2:chat',
+            model='PI-Edula:Chat',
             messages=conversacion,
             stream=True,
             options={'num_ctx': 50, 'temperature': 0.1}
@@ -23,7 +23,7 @@ def main():
 
 def createCollection():
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_or_create_collection(name='RagCollection3')
+    collection = client.get_or_create_collection(name='RagCollection4')
     documentos = [
         {"id": '1', "content": "Python es un lenguaje de programación popular para el desarrollo web y análisis de datos."},
         {"id": '2', "content": "Django es un framework de Python para desarrollo rápido de aplicaciones web."},
@@ -43,12 +43,12 @@ def createCollection():
 def createEmbeddings(texto):
     print(f'texto: {texto}')
     resonseEmbedding = ollama.embeddings(model="mxbai-embed-large", prompt=texto)
-    print(f'embedding: {resonseEmbedding}')
+    print(f'embedding: {resonseEmbedding["embedding"]}')
     return resonseEmbedding["embedding"]
 
 def obtenerContexto(mensaje):
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_collection(name='RagCollection3')
+    collection = client.get_collection(name='prueba1')
     mensaje_Embedding = createEmbeddings(texto=mensaje)
     resultados = collection.query(
         query_embeddings=mensaje_Embedding,
