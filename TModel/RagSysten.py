@@ -8,13 +8,14 @@ def main():
     while True:
         mensaje = input('Ingresa una duda: ')
         contexto = obtenerContexto(mensaje=mensaje)
-        conversacion = [{'role': 'system', 'content':f'context: {contexto}, only response in spanish'}]
+        conversacion = []
+        conversacion.append({"role": "system", "content": f'Eres un asistente virtual llamado Edula creado por ITCA FEPADE en El Salvador y solo hablas en español. Tu función es proporcionar asistencia estrictamente en temas educativos Debes mantener un enfoque educativo en todas tus respuestas o respuestas fuera de tema. Ademas responde con menos de 200 palabras, empieza cada respuesta con el nombre con base a la conversacion. Esta es la informacion de contexto: {contexto}'})
         conversacion.append({'role': 'user', 'content': mensaje})
         response = ollama.chat(
             model='PI-Edula:Chat',
             messages=conversacion,
             stream=True,
-            options={'num_ctx': 50, 'temperature': 0.1}
+            options={'num_ctx': 50, 'temperature': 0.1, "num_predict":150}
         )
         for chunk in response:
             print(chunk['message']['content'], end='', flush=True)
@@ -48,22 +49,23 @@ def createEmbeddings(texto):
 
 def obtenerContexto(mensaje):
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_collection(name='prueba1')
+    collection = client.get_collection(name='InformacionRAG')
     mensaje_Embedding = createEmbeddings(texto=mensaje)
     resultados = collection.query(
         query_embeddings=mensaje_Embedding,
         n_results=2
     )
-    contexto = resultados["metadatas"][0][0]
+    contexto = resultados["metadatas"][0][0].get("content")
     print(f'contexto: {contexto}')
     return contexto
 
-def eliminarCollection():
+def obtenerColeciones():
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_collection(name='RagCollection')
-    collection.delete()
-    print('Colección eliminada.')
+    collection = client.get_collection(name='InformacionRAG')
+    print(f'colecciones: {collection.peek()}')
+    print('Colecciones obtenidas.')
 
 if __name__ == "__main__":
     #createCollection()
     main()
+    #obtenerColeciones()

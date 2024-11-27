@@ -93,14 +93,9 @@ class FuncionesIA:
                 model=modelo,
                 messages=conversacion,
                 stream=False,
-                options={
-                    #'num_ctx': int(max_tokens),
-                    "temperature": float(temperature),
-                    "num_gpu": int(num_gpu),
-                },
+                options={'num_predict': int(max_tokens), 'temperature': float(temperature), 'num_gpu':int(num_gpu)}
             )
-            print(f'pregunta entrante: {historial}')
-            print(f'temp: {temperature} \n num gpu: {num_gpu}')
+            print(f'historial: {historial}')
             return responseCall["message"]['content']
         except Exception as e:
             return {"error": f"{str(e)}"}
