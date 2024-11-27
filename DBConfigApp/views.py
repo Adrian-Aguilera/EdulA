@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from EduGeneralApp.models import General_Collection
 from EduAsistenteApp.models import AssistantCollection
-from .models import DocumentosRagGeneral
-from .serializers import DocumentosRagGeneralSerializer
+from .models import DocumentosRagGeneral, DocumentosRagAsistente
+from .serializers import DocumentosRagGeneralSerializer, DocumentosRagAsistenteSerializer
 
 '''
 Esta es una Vista que se encarga de crear la base de datos
@@ -48,6 +48,18 @@ class DataToChromaDB(APIView):
         if request.method == "GET":
             try:
                 controller = ControllerDataBase()
+                documentos = DocumentosRagAsistente.objects.all()
+                DocumentosSerializer = DocumentosRagAsistenteSerializer(documentos, many=True)
+                return Response(DocumentosSerializer.data)
+                nombre_coleccion  = AssistantCollection.objects.all().first().Nombre_Coleccion
+                crear_coleccion = controller.createCollection(
+                    documentos=DocumentosSerializer.data,
+                    nombre_Coleccion=nombre_coleccion
+                )
+                if crear_coleccion.get('success'):
+                    return Response({"success": "Coleccion Embedding creada Exitosamente"})
+                else:
+                    return Response({"error": crear_coleccion.get('error')})
             except Exception as e:
                 return Response({"Error": f"{str(e)}"})
         else:
