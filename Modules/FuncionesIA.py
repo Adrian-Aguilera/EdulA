@@ -131,9 +131,9 @@ class FuncionesIA:
             userMessageEmbedding = await self._callEmbedding(prompt=userMessage)
             Collection = self.ChromaClient.get_collection(name=nameCollection)
             results = Collection.query(
-                query_embeddings=[userMessageEmbedding["embedding"]], n_results=1
+                query_embeddings=userMessageEmbedding["embedding"], n_results=1
             )
-            respuesta = results["documents"][0][0]
+            respuesta = results["metadatas"][0][0].get('content')
             # print('respuesta embeding: ',respuesta)
             return respuesta
         except Exception as e:
