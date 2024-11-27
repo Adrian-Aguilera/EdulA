@@ -1,18 +1,7 @@
-from Modules.ConfigDBModel import ModelDB, ModelDBRag
+from Modules.ConfigDBModel import ModelDBRag
 from asgiref.sync import async_to_sync
 
 class ControllerDataBase:
-    def createDatabase(self, nameCollection, dataContent):
-        try:
-            objCollectionDB = ModelDB()
-            createCollection = objCollectionDB.embeddingsDataBase(nameCollection=nameCollection, dataContext=dataContent)
-            if createCollection:
-                return {"success": "Colleccion Embedding creada Exitosamente"}
-            else:
-                return {'error': 'Error al crear la colleccion'}
-        except Exception as e:
-            return {'Exception error': f'Ocurrió un error al crear la colleccion: {str(e)}'}
-
     def createCollection(self, documentos, nombre_Coleccion):
         try:
             objeto = ModelDBRag()

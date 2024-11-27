@@ -47,14 +47,7 @@ class DataToChromaDB(APIView):
     def activateAsistentMode(request):
         if request.method == "GET":
             try:
-                dbController = ControllerDataBase()
-                configInstance = AssistantCollection.objects.all()
-                getNameCollection = configInstance[0].Nombre_Coleccion
-                #getDataContent = DataAsistenteChat.objects.all()[0].dataContent
-                print(f'name Collection para Asistente: {getNameCollection} \n')
-                #print(f'data de Asistente: {getDataContent} \n')
-                #response = dbController.createDatabase(nameCollection=getNameCollection, dataContent=getDataContent)
-                return Response({"success": "Base de datos creada Exitosamente"})
+                controller = ControllerDataBase()
             except Exception as e:
                 return Response({"Error": f"{str(e)}"})
         else:
