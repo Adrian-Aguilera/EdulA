@@ -50,7 +50,6 @@ class DataToChromaDB(APIView):
                 controller = ControllerDataBase()
                 documentos = DocumentosRagAsistente.objects.all()
                 DocumentosSerializer = DocumentosRagAsistenteSerializer(documentos, many=True)
-                return Response(DocumentosSerializer.data)
                 nombre_coleccion  = AssistantCollection.objects.all().first().Nombre_Coleccion
                 crear_coleccion = controller.createCollection(
                     documentos=DocumentosSerializer.data,
