@@ -1,6 +1,6 @@
 import ollama
 from dotenv import load_dotenv
-import os
+import re
 import chromadb
 from chromadb.config import Settings
 from ModelCustomApp.models import SettingLLM, SettingsChatGeneral, SettingsChatAsistente, SettingsChroma
@@ -86,8 +86,7 @@ class FuncionesIA:
             print(f'modelo asistente: {modelo}')
             conversacion = []
             if contexto:
-                conversacion.append({"role": "system", "content": f'Eres un asistente virtual llamado Edula creado por ITCA FEPADE en El Salvador y solo hablas en español. Tu función es proporcionar asistencia estrictamente en temas educativos Debes mantener un enfoque educativo en todas tus respuestas o respuestas fuera de tema. Ademas responde con menos de 200 palabras, empieza cada respuesta con el nombre con base a la conversacion. Esta es la informacion de contexto: {contexto}'})
-            # Añadir el mensaje del usuario al historial de mensajes
+                conversacion.append({"role": "system", "content": f'Eres un asistente virtual llamado Edula creado por ITCA FEPADE en El Salvador y solo hablas en español. Tu función es proporcionar asistencia estrictamente en temas educativos Debes mantener un enfoque educativo en todas tus respuestas. Ademas responde con menos de 200 palabras. Esta es la informacion de contexto: {contexto}. Si no conoces una respuesta, responde con "No se puede responder en este momento". Si en el contexto se menciona una url debes proporcionarla como una referencia.'})
             conversacion+=historial
             responseCall = await self.ollamaClient.chat(
                 model=modelo,
@@ -124,6 +123,7 @@ class FuncionesIA:
         '''
         try:
             userMessageEmbedding = await self._callEmbedding(prompt=userMessage)
+            print(f'embeding: {userMessageEmbedding["embedding"]}')
             Collection = self.ChromaClient.get_collection(name=nameCollection)
             results = Collection.query(
                 query_embeddings=userMessageEmbedding["embedding"], n_results=1

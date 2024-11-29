@@ -24,20 +24,25 @@ def main():
 
 def createCollection():
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_or_create_collection(name='RagCollection4')
+    collection = client.get_or_create_collection(name='urls1')
     documentos = [
-        {"id": '1', "content": "Python es un lenguaje de programación popular para el desarrollo web y análisis de datos."},
-        {"id": '2', "content": "Django es un framework de Python para desarrollo rápido de aplicaciones web."},
-        {"id": '3', "content": "No se ha encontrado ningun resultado  similar"},
+        {"id": '1', "content": "Python es un lenguaje de programación popular para el desarrollo web y análisis de datos.", "url": "https://www.python.org/"},
+        {"id": '2', "content": "Django es un framework de Python para desarrollo rápido de aplicaciones web.", "url": "https://www.djangoproject.com/"},
+        {"id": '3', "content": "No se ha encontrado ningun resultado  similar", "url": "https://www.google.com/"},
     ]
 
     for doc in documentos:
         print(f"Agregando documento {doc['id']} a la colección...")
         print(f'Documento: {doc["content"]}')
+        print(f'URL: {doc["url"]}')
+
+        # Pasamos la URL como lista
         collection.add(
             ids=doc["id"],
             embeddings=createEmbeddings(doc["content"]),
-            metadatas={"content": doc["content"]}
+            metadatas={"content": doc["content"]},
+            documents=doc["content"],
+            uris=[doc["url"]]
         )
     print('Documentos agregados a la colección.')
 
@@ -49,10 +54,11 @@ def createEmbeddings(texto):
 
 def obtenerContexto(mensaje):
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_collection(name='InformacionRAG')
+    collection = client.get_collection(name='RagCollection1')
     mensaje_Embedding = createEmbeddings(texto=mensaje)
     resultados = collection.query(
         query_embeddings=mensaje_Embedding,
+        query_uris=1,
         n_results=2
     )
     contexto = resultados["metadatas"][0][0].get("content")
@@ -61,11 +67,11 @@ def obtenerContexto(mensaje):
 
 def obtenerColeciones():
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_collection(name='InformacionRAG')
-    print(f'colecciones: {collection.peek()}')
-    print('Colecciones obtenidas.')
+    collection = client.get_collection(name='urls1')
+    results = collection.peek()
+    print(results)
 
 if __name__ == "__main__":
     #createCollection()
-    main()
-    #obtenerColeciones()
+    #main()
+    obtenerColeciones()
