@@ -40,6 +40,7 @@ class ControllerAsistenteChat:
 
             print(f'contexto de embedding: {EmbeddingsData}')
             # Añadir la pregunta al historial
+            historial.append({"role": "user", "content": pregunta})
             # Llamar a la API para generar la respuesta del asistente
             respuestaChat = await self.FuncionesIA._callChatGenerate(historial=historial, contexto=EmbeddingsData)
             if isinstance(respuestaChat, dict) and 'error' in respuestaChat:
