@@ -53,16 +53,15 @@ def createEmbeddings(texto):
 
 def obtenerContexto(mensaje):
     client = chromadb.Client(settings=configuracion)
-    collection = client.get_collection(name='RagCollection1')
+    collection = client.get_collection(name='urls4')
     mensaje_Embedding = createEmbeddings(texto=mensaje)
     resultados = collection.query(
         query_embeddings=mensaje_Embedding,
-        query_uris=1,
-        n_results=2
+        n_results=1
     )
-    contexto = resultados["metadatas"][0][0].get("content")
-    print(f'contexto: {contexto}')
-    return contexto
+    full_contexto = [f"{item.get('content', '')} referencias: {item.get('url', '')}" for item in resultados["metadatas"][0]]
+    print(f'full contexto: {full_contexto[0]}')
+    return full_contexto[0]
 
 def obtenerColeciones():
     client = chromadb.Client(settings=configuracion)
@@ -73,5 +72,5 @@ def obtenerColeciones():
 
 if __name__ == "__main__":
     #createCollection()
-    #main()
-    obtenerColeciones()
+    main()
+    #obtenerColeciones()
