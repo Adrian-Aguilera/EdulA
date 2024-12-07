@@ -2,7 +2,6 @@ import Modules.FuncionesIA as FuncionesIA
 from EduAsistenteApp.models import AssistantCollection
 from asgiref.sync import sync_to_async
 from dotenv import load_dotenv
-import os
 load_dotenv(override=True)
 
 class ControllerAsistenteChat:

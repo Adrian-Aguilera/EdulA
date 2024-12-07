@@ -7,7 +7,7 @@ class General_Collection(models.Model):
     #funcion para validar que solo se pueda ingresar una vez
     def save(self, *args, **kwargs):
         if self.pk is None and General_Collection.objects.exists():
-            raise ValidationError('No puedes crear un nuevo registro de AssistantCollection. Solo puedes modificar el existente.')
+            raise ValidationError('Solo puedes crear una coleccion para el asistente General.')
         super(General_Collection, self).save(*args, **kwargs)
 
     def __str__(self):

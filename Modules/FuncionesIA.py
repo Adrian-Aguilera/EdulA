@@ -1,12 +1,10 @@
 import ollama
 from dotenv import load_dotenv
-import re
 import chromadb
 from chromadb.config import Settings
 from ModelCustomApp.models import SettingLLM, SettingsChatGeneral, SettingsChatAsistente, SettingsChroma
-from asgiref.sync import sync_to_async, async_to_sync
+from asgiref.sync import sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
-from ollama import chat
 load_dotenv(override=True)
 
 
