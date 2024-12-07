@@ -15,14 +15,14 @@ class ModelDBRag:
             collecion = self.ChromaClient.get_or_create_collection(name=nombre_Coleccion)
             print(documentos)
             for doc in documentos:
-                print(f'doc: {doc}')
+                print(f'doc: {doc["referencia_url"]}')
                 try:
                     to_embedding = await self.funcionesIA._callEmbedding(prompt=doc['documento'])
                     print('to embedding: ', to_embedding['embedding'])
                     collecion.add(
                         ids=str(doc['id']),
                         embeddings=to_embedding["embedding"],
-                        metadatas={"content": doc['documento']}
+                        metadatas={"content": doc['documento'], "url": doc['referencia_url']}
                     )
                 except Exception as e:
                     return {"Embedding error": f"{str(e)}"}

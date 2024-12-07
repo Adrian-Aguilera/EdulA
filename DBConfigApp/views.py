@@ -63,3 +63,21 @@ class DataToChromaDB(APIView):
                 return Response({"Error": f"{str(e)}"})
         else:
             return Response({"error": "metodo no disponible"})
+
+    @api_view(['GET'])
+    @permission_classes([IsAuthenticated])
+    def showDocuments(request):
+        if request.method == "GET":
+            try:
+                documentos_General = DocumentosRagGeneral.objects.all()
+                documentos_Asistente = DocumentosRagAsistente.objects.all()
+                DocumentosGeneralSerializer = DocumentosRagGeneralSerializer(documentos_General, many=True)
+                DocumentosAsistenteSerializer = DocumentosRagAsistenteSerializer(documentos_Asistente, many=True)
+                return Response({"success": {
+                    "documentos General": DocumentosGeneralSerializer.data,
+                    "documentos Asistente": DocumentosAsistenteSerializer.data
+                }})
+            except Exception as e:
+                return Response({"Error": f"{str(e)}"})
+        else:
+            return Response({"error": "metodo no disponible"})

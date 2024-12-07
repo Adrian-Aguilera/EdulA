@@ -8,8 +8,12 @@ class ControllerDataBase:
             crear_Coleccion = async_to_sync()(objeto.CargarDocumentos)(nombre_Coleccion=nombre_Coleccion, documentos=documentos)
             print(f'crear_Coleccion: {crear_Coleccion}')
             if crear_Coleccion.get('success'):
-                return {"success": "Colleccion Embedding creada Exitosamente"}
+                return {"success": {
+                    "message": f'Colleccion Embedding creada Exitosamente',
+                }}
             else:
                 return {'error': crear_Coleccion}
         except Exception as e:
-            return {'Collection error': f' {str(e)}'}
+            return {'error': {
+                "exception": f' {str(e)}',
+            }}
