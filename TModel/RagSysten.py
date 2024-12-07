@@ -68,7 +68,8 @@ def obtenerColeciones():
     client = chromadb.Client(settings=configuracion)
     collection = client.get_collection(name='urls4')
     results = collection.peek()
-    print(results)
+    urls = [resultado.get('url') for resultado  in results["metadatas"]]
+    print(urls)
 
 if __name__ == "__main__":
     #createCollection()
