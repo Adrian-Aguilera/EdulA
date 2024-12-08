@@ -33,7 +33,7 @@ class ControllerAsistenteChat:
 
             print(f'pregunta a la cual se hara embedding: {pregunta}')
             # Obtener el contexto de embedding
-            EmbeddingsData = await self.FuncionesIA._responseEmbedding(userMessage=pregunta, nameCollection=nameCollection)
+            EmbeddingsData = await self.FuncionesIA._get_context(userMessage=pregunta, nameCollection=nameCollection)
             if not EmbeddingsData or 'error' in EmbeddingsData:
                 return {"error": EmbeddingsData.get('error', 'Error al obtener el embedding.')}
 

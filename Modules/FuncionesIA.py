@@ -50,7 +50,7 @@ class FuncionesIA:
             info: solo se encarga de generar texto sin formato para un chat (generate function)
         '''
         try:
-            print(contextEmbedding)
+            #print(contextEmbedding)
             settings_chat = await sync_to_async(SettingsChatGeneral.objects.select_related('Model_LLM').first)()
             modelo = settings_chat.Model_LLM.model
             max_tokens = settings_chat.max_Tokens
@@ -114,7 +114,7 @@ class FuncionesIA:
         except Exception as e:
             return {"error": f"Error en la obtención de embeddings: {str(e)}"}
 
-    async def _responseEmbedding(self, userMessage, nameCollection):
+    async def _get_context(self, userMessage, nameCollection):
         '''
             Es es la funcion que se encarga de obtener primero el embedding del mensaje entrante (convertirlo a numerico la respuesta).
             Luego hace la consulta en la db de chroma para obtener una respuesta de la base de datos, con base a la similitud del mensaje del usuario
@@ -126,9 +126,10 @@ class FuncionesIA:
             results = Collection.query(
                 query_embeddings=userMessageEmbedding["embedding"], n_results=1
             )
-            respuesta = results["metadatas"][0][0].get('content')
-            # print('respuesta embeding: ',respuesta)
-            return respuesta
+            #respuesta = results["metadatas"][0][0].get('content')
+            contexto = [ f"{item.get('content', '')} referencias: {item.get('url', '')}" for item in results["metadatas"][0]][0]
+            #print(f'contexto: {contexto}')
+            return contexto
         except Exception as e:
             return {"error": f"Error en la respuesta de embedding: {str(e)}"}
 

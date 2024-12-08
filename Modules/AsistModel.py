@@ -7,7 +7,7 @@ class AsistModel:
         try:
             instancia = await sync_to_async(list)(AssistantCollection.objects.all())
             nameCollection = instancia[0].Nombre_Coleccion
-            EmbeddingsData = await FuncionesIA._responseEmbedding(userMessage=userMessage, nameCollection=nameCollection)
+            EmbeddingsData = await FuncionesIA._get_context(userMessage=userMessage, nameCollection=nameCollection)
             responseGenerate = await FuncionesIA._callGenerate(message_user=userMessage, contextEmbedding=EmbeddingsData)
             if 'error' in EmbeddingsData:
                 return ({'error': EmbeddingsData['error']})

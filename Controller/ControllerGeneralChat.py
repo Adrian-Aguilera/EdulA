@@ -33,7 +33,7 @@ class GeneralChat:
             #obtener el nombre de la coleccion que tiene la informacion de la base de datos de vectorial (Chroma)
             instancia = await sync_to_async(list)(General_Collection.objects.all())
             nameCollection = instancia[0].Nombre_Coleccion
-            ContextEmbeding = await self.funcionesIA._responseEmbedding(userMessage=message, nameCollection=nameCollection)
+            ContextEmbeding = await self.funcionesIA._get_context(userMessage=message, nameCollection=nameCollection)
             responseGenerate = await self.funcionesIA._callGenerate(message_user=message, contextEmbedding=ContextEmbeding)
             if 'error' in ContextEmbeding:
                 return ({'error': ContextEmbeding['error']})
