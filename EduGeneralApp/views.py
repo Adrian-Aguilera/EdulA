@@ -16,9 +16,9 @@ class ControllerInter():
     def ResponseGeneralChat(message):
         if message:
             try:
-                InstanciaControllador= GeneralChat()
-                mensajeObtenido = async_to_sync(InstanciaControllador.GeneralChat)(message)
-                return mensajeObtenido
+                controller= GeneralChat()
+                respuesta = async_to_sync(controller.GeneralChat)(message=message)
+                return respuesta
             except Exception as e:
                 return {"error": f"{str(e)}"}
         else:
@@ -33,8 +33,8 @@ class GeneralEdula(APIView):
                 data_requests = request.data
                 message = data_requests.get('mesage')
                 if message:
-                    mensaje = ControllerInter.ResponseGeneralChat(message)
-                    return JsonResponse({"data": mensaje})
+                    respuesta = ControllerInter.ResponseGeneralChat(message)
+                    return JsonResponse({"data":respuesta})
                 else:
                     return Response({"error": "Error engine activate"})
 

@@ -8,15 +8,15 @@ import os
 load_dotenv(override=True)
 
 class GeneralChat:
-    def __init__(self):
+    def __init__(self) -> None:
         self.funcionesIA = FuncionesIA()
     async def GeneralChat(self, message):
         '''
             cargar la clase del modulo (modelGeneral)
             Llamando la funcion principal para obtener la respuesta (mainFun)
         '''
-        mainFun = await self.ResponseGeneralChat(message=message)
-        return mainFun
+        respuesta = await self.ResponseGeneralChat(message=message)
+        return respuesta
 
     async def ResponseGeneralChat(self, message):
         '''
@@ -34,13 +34,17 @@ class GeneralChat:
             instancia = await sync_to_async(list)(General_Collection.objects.all())
             nameCollection = instancia[0].Nombre_Coleccion
             contexto_dict = await self.funcionesIA._get_context(userMessage=message, nameCollection=nameCollection)
-            contexto = contexto_dict.get('content')
+            contexto = contexto_dict[0].get('content')
             responseGenerate = await self.funcionesIA._callGenerate(message_user=message, contextEmbedding=contexto)
             if 'error' in contexto_dict:
                 return ({'error': contexto_dict['error']})
             elif 'error' in responseGenerate:
                 return ({'error': responseGenerate['error']})
             else:
-                return ({'response': responseGenerate})
+                respuesta = {
+                    'response': responseGenerate,
+                    'referencia': contexto_dict[0].get('url')
+                }
+                return respuesta
         except Exception as e:
             return {"error": f"{str(e)}"}

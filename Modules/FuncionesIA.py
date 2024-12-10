@@ -127,7 +127,7 @@ class FuncionesIA:
                 query_embeddings=userMessageEmbedding["embedding"], n_results=1
             )
             #respuesta = results["metadatas"][0][0].get('content')
-            contexto = [ {"content": item.get('content', ''), "url": item.get('url', '')} for item in results["metadatas"][0]]
+            contexto = [{"content": item.get('content', ''), "url": item.get('url', '')} for item in results["metadatas"][0]]
 
             return contexto
         except Exception as e:
