@@ -13,8 +13,8 @@ class ControllerInter():
         if pregunta:
             try:
                 InstanciaControllador= ControllerAsistenteChat()
-                mensajeObtenido = async_to_sync()(InstanciaControllador.AsistenteChat)(conversacion=pregunta, historial=historial)
-                return mensajeObtenido
+                mensaje_asistente = async_to_sync()(InstanciaControllador.AsistenteChat)(conversacion=pregunta, historial=historial)
+                return mensaje_asistente
             except Exception as e:
                 return {"error": f"{str(e)}"}
         else:
@@ -56,7 +56,7 @@ class AsistenteEdula(APIView):
                     return Response({"Error": f'{str(e)}'})
                 #guardar la la pregunta entrante y la respuesta del asistente
                 pregunta_obj = PreguntasEstudiante.objects.create(estudiante=isEstudiante, preguntas=pregunta)
-                RespuestasAsistenteEdula.objects.create(estudiante=isEstudiante, preguntas=pregunta_obj, respuesta=respuesta_Asistente)
+                RespuestasAsistenteEdula.objects.create(estudiante=isEstudiante, preguntas=pregunta_obj, respuesta=respuesta_Asistente.get('Edula-IA'))
 
                 return Response({"data": {
                     "respuesta": respuesta_Asistente,

@@ -33,19 +33,28 @@ class ControllerAsistenteChat:
 
             print(f'pregunta a la cual se hara embedding: {pregunta}')
             # Obtener el contexto de embedding
-            EmbeddingsData = await self.FuncionesIA._get_context(userMessage=pregunta, nameCollection=nameCollection)
-            if not EmbeddingsData or 'error' in EmbeddingsData:
-                return {"error": EmbeddingsData.get('error', 'Error al obtener el embedding.')}
-
-            print(f'contexto de embedding: {EmbeddingsData}')
+            contexto_dict = await self.FuncionesIA._get_context(userMessage=pregunta, nameCollection=nameCollection)
+            contexto = contexto_dict[0].get('content')
             # Añadir la pregunta al historial
             historial.append({"role": "user", "content": pregunta})
             # Llamar a la API para generar la respuesta del asistente
-            respuestaChat = await self.FuncionesIA._callChatGenerate(historial=historial, contexto=EmbeddingsData)
-            if isinstance(respuestaChat, dict) and 'error' in respuestaChat:
-                return {"error": respuestaChat['error']}
-
-            return respuestaChat
-
+            respuestaChat = await self.FuncionesIA._callChatGenerate(historial=historial, contexto=contexto)
+            url_referencia = contexto_dict[0].get('url')
+            if 'error' in contexto_dict:
+                return ({'errors': {
+                    'error': contexto_dict['error'],
+                    'mensaje': 'Error en el contexto del asistente'
+                }})
+            elif 'error' in respuestaChat:
+                return ({'errors': {
+                    'error': respuestaChat['error'],
+                    'mensaje': 'Error en la respuesta del asistente'
+                }})
+            else:
+                respuesta = {
+                    'Edula-IA': respuestaChat,
+                    'referencia': url_referencia
+                }
+                return respuesta
         except Exception as e:
             return {"error chat": f"{str(e)}"}
