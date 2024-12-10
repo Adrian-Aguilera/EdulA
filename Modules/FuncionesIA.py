@@ -126,10 +126,10 @@ class FuncionesIA:
             results = Collection.query(
                 query_embeddings=userMessageEmbedding["embedding"], n_results=1
             )
-            respuesta = results["metadatas"][0][0].get('content')
+            #respuesta = results["metadatas"][0][0].get('content')
             contexto = [ {"content": item.get('content', ''), "url": item.get('url', '')} for item in results["metadatas"][0]]
-            print(f'contexto: {contexto}')
-            return respuesta
+
+            return contexto
         except Exception as e:
             return {"error": f"Error en la respuesta de embedding: {str(e)}"}
 
