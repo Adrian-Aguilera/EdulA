@@ -24,7 +24,8 @@ class PerfilTokenObtainPairSerializer(TokenObtainPairSerializer):
             return {
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
-                'carnet': estudiante.carnet
+                'carnet': estudiante.carnet,
+                "id": estudiante.id
             }
         else:
             raise serializers.ValidationError(

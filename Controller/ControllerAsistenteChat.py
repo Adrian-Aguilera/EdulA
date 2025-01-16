@@ -52,7 +52,7 @@ class ControllerAsistenteChat:
                 }})
             else:
                 respuesta = {
-                    'Edula-IA': respuestaChat,
+                    'Edula_IA': respuestaChat,
                     'referencia': url_referencia
                 }
                 return respuesta

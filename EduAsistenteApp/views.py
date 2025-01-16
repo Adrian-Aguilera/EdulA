@@ -56,7 +56,7 @@ class AsistenteEdula(APIView):
                     return Response({"Error": f'{str(e)}'})
                 #guardar la la pregunta entrante y la respuesta del asistente
                 pregunta_obj = PreguntasEstudiante.objects.create(estudiante=isEstudiante, preguntas=pregunta)
-                RespuestasAsistenteEdula.objects.create(estudiante=isEstudiante, preguntas=pregunta_obj, respuesta=respuesta_Asistente.get('Edula-IA'))
+                RespuestasAsistenteEdula.objects.create(estudiante=isEstudiante, preguntas=pregunta_obj, respuesta=respuesta_Asistente.get('Edula_IA'))
 
                 return Response({"data": {
                     "respuesta": respuesta_Asistente,

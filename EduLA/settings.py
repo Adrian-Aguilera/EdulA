@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     'colorfield',
     'admin_interface',
     'django.contrib.admin',
@@ -60,8 +61,10 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
-    'USER_ID_FIELD': 'id',  # es el campo a que tomara como referencia o indicador unico
+    'ALGORITHM': 'HS256',
+    'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 MIDDLEWARE = [
@@ -157,12 +160,9 @@ USE_TZ = True
 #Cors
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "https://testing-dulcehogar.reviewbox.xyz",
-    "http://localhost:8080",
-    "http://127.0.0.1:9000"
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
 ]
-
 #autenticacion para login, tanto para el modelo User predeterminado de django y los customs
 AUTHENTICATION_BACKENDS = [
     'EduEstudianteApp.backends.PerfilBackend', #validacion para mi apliacion que apunta a mi modelo perfil
@@ -180,7 +180,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'EduLA/static')
 STATICFILES_DIRS = [
     #os.path.join(BASE_DIR, 'EduGeneralApp/static'),
 ]
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CORS_ALLOW_CREDENTIALS = True
 """
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
 SESSION_COOKIE_SECURE = True

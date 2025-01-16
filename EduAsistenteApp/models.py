@@ -26,7 +26,7 @@ class PreguntasEstudiante(models.Model):
 class RespuestasAsistenteEdula(models.Model):
     estudiante = models.ForeignKey(PerfilEstudiante, on_delete=models.CASCADE)
     preguntas = models.ForeignKey(PreguntasEstudiante, on_delete=models.CASCADE)
-    respuesta = models.CharField(max_length=255, help_text='Ingresa la respuesta del asistente')
+    respuesta = models.CharField(max_length=255, help_text='Ingresa la respuesta del asistente', null=True, blank=True)
 
     def __str__(self):
         return f'{self.estudiante.carnet} - {self.preguntas.preguntas} - {self.respuesta}'
